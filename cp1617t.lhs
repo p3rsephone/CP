@@ -5,7 +5,7 @@
 \usepackage{graphicx}
 \usepackage{cp1617t}
 %================= lhs2tex=====================================================%
-%include polycode.fmt 
+%include polycode.fmt
 %format (div (x)(y)) = x "\div " y
 %format succ = "\succ "
 %format map = "\map "
@@ -41,7 +41,7 @@
 %format (anaA (f) (g)) = "\ana{" f "~" g "}_A"
 %format (cataB (f) (g)) = "\cata{" f "~" g "}_B"
 %format (anaB (f) (g)) = "\ana{" f "~" g "}_B"
-%format Either a b = a "+" b 
+%format Either a b = a "+" b
 %format fmap = "\mathsf{fmap}"
 %format NA   = "\textsc{na}"
 %format NB   = "\textsc{nb}"
@@ -89,9 +89,9 @@
 \\\hline
 a78985 & Diana Costa
 \\
-a78203 & Paulo Mendes	
+a78203 & Paulo Mendes
 \\
-a76945 & Tânia Silva	
+a76945 & Tânia Silva
 \end{tabular}
 \end{center}
 
@@ -107,7 +107,7 @@ parte-se de um repertório de \emph{combinadores} que formam uma álgebra da
 programação (conjunto de leis universais e seus corolários) e usam-se esses
 combinadores para construir programas \emph{composicionalmente}, isto é,
 agregando programas já existentes.
-  
+
 Na sequência pedagógica dos planos de estudo dos dois cursos que têm esta
 disciplina, restringe-se a aplicação deste método ao desenvolvimento de programas
 funcionais na linguagem \Haskell.
@@ -147,7 +147,7 @@ o ``kit'' básico, escrito em \Haskell, para realizar o trabalho. Basta executar
 \begin{Verbatim}[fontsize=\small]
     ghci cp1617t.lhs
 \end{Verbatim}
-para ver que assim é: 
+para ver que assim é:
 \begin{quote}
 \begin{Verbatim}[fontsize=\small]
 GHCi, version 8.0.2: http://www.haskell.org/ghc/  :? for help
@@ -172,12 +172,12 @@ fonte, se ter inserido o seguinte código \Haskell:
 
 \begin{code}
 import Cp
-import List 
-import Nat  
+import List
+import Nat
 import Exp
 import BTree
 import LTree
-import St 
+import St
 import Probability hiding (cond)
 import Data.List
 import Test.QuickCheck hiding ((><))
@@ -228,7 +228,7 @@ as suas leituras para um sistema central, onde é feito o respectivo processamen
 Verificando-se que o sistema central está muito sobrecarregado, surgiu a
 ideia de equipar cada sensor com um microcontrolador que faça algum pré-processamento
 das leituras antes de as enviar ao sistema central. Esse tratamento envolve
-as operações (em vírgula flutuante) de soma, subtracção, multiplicação e divisão. 
+as operações (em vírgula flutuante) de soma, subtracção, multiplicação e divisão.
 
 Há, contudo, uma dificuldade: o código da divisão não cabe na memória do
 microcontrolador, e não se pretende investir em novos microcontroladores
@@ -271,7 +271,7 @@ DESCRIPTION
     (...)
     The following options are available:
     (...)
-        -w   The number of words in each input file is written to the standard 
+        -w   The number of words in each input file is written to the standard
              output.
     (...)
 \end{verbatim}
@@ -286,10 +286,6 @@ wc_w (c:l) =
      if not (sep c) && lookahead_sep l
      then wc_w l + 1
      else wc_w l
-       where
-          sep c = ( c == ' ' || c == '\n' || c == '\t')
-          lookahead_sep []    = True
-          lookahead_sep (c:l) = sep c
 \end{code}
 Re-implemente esta função segundo o modelo \emph{|worker|/|wrapper|} onde
 |wrapper| deverá ser um catamorfismos de listas. Apresente os cálculos que
@@ -566,7 +562,7 @@ que, assumindo já disponível a função |jogo| acima referida, dá como result
 a distribuição de equipas vencedoras do campeonato.
 \end{enumerate}
 \textbf{Sugestão:} inspire-se na secção \monadification\ (\emph{`Monadification'
-of Haskell code made easy}) dos apontamentos \cite{Ol05}. 
+of Haskell code made easy}) dos apontamentos \cite{Ol05}.
 
 %----------------- Bibliografia (exige bibtex) --------------------------------%
 
@@ -656,7 +652,7 @@ particular de programação monádica.
 São dadas: a função que simula jogos entre equipas,
 \begin{code}
 type Equipa = String
- 
+
 jogo :: (Equipa, Equipa) -> Dist Equipa
 jogo(e1,e2) = D [ (e1,1-r1/(r1+r2)),(e2,1-r2/(r1+r2)) ] where
               r1 = rank e1
@@ -692,7 +688,7 @@ e algumas funções auxiliares de menor importância: uma que ordena
 listas com base num atributo (função que induz uma pré-ordem),
 \begin{code}
 presort :: (Ord a, Ord b) => (b -> a) -> [b] -> [b]
-presort f = map snd . sort . (map (fork f id)) 
+presort f = map snd . sort . (map (fork f id))
 \end{code}
 e outra que converte ``look-up  tables" em funções (parciais):
 \begin{code}
@@ -705,21 +701,42 @@ pap m k = unJust (lookup k m) where unJust (Just a) = a
 \section{Soluções propostas}\label{sec:resolucao}
 Os alunos devem colocar neste anexo as suas soluções aos exercícios
 propostos, de acordo com o ``layout'' que se fornece. Não podem ser
-alterados os nomes das funções dadas, mas pode ser adicionado texto e / ou 
+alterados os nomes das funções dadas, mas pode ser adicionado texto e / ou
 outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
 \begin{code}
-inv x = undefined
+inv x = for ( (1+) . ((1-x)*) ) 1
+
+{- TODO: FIX GOD DAMN QUICKCHECK NOW --Eu faço Diana  ass.Tânia
+forAll (choose (0,1)) $ \r1 ->
+  forAll (choose (0,1)) $ \r2 ->
+   (rndListIndex idx r1 r2) < idx
+
+testInv :: Property
+testInv =
+    forAll (Test.QuickCheck.choose (1,2)) $ \x ->
+        forAll (Test.QuickCheck.choose (1,100)) $ \n ->
+            (inv (inv x n) n) == x
+
+    (inv (inv x 5) 5) == x
+-}
 \end{code}
 
 \subsection*{Problema 2}
 \begin{code}
+
+{-TODO: wc :(
+sep c = ( c == ' ' || c == '\n' || c == '\t')
+lookahead_sep []    = True
+lookahead_sep (c:l) = sep c
+
 wc_w_final :: [Char] -> Int
 wc_w_final = wrapper . worker
-wrapper = undefined
-worker = undefined
+wrapper = cataList (either (const True) (sep.p1))
+worker = cataList (either (zero) (cond (uncurry(&&).split((not sep.p1) lookahead_sep.p2)) (succ(wc_w_final.p2)) wc_w_final.p2)).outList
+-}
 \end{code}
 
 \subsection*{Problema 3}
@@ -761,7 +778,7 @@ anaB = undefined
 \end{code}
 
 \begin{code}
-generateAlgae = undefined 
+generateAlgae = undefined
 
 showAlgae = undefined
 \end{code}
@@ -773,7 +790,6 @@ permuta = undefined
 
 eliminatoria = undefined
 \end{code}
-
 %----------------- Fim do anexo cpm soluções propostas ------------------------%
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
@@ -793,4 +809,3 @@ envia = unsafePerformIO
 }
 
 \end{document}
-
