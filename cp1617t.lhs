@@ -286,6 +286,11 @@ wc_w (c:l) =
      if not (sep c) && lookahead_sep l
      then wc_w l + 1
      else wc_w l
+      where
+        sep c = ( c == ' ' || c == '\n' || c == '\t')
+        lookahead_sep []    = True
+        lookahead_sep (c:l) = sep c
+
 \end{code}
 Re-implemente esta função segundo o modelo \emph{|worker|/|wrapper|} onde
 |wrapper| deverá ser um catamorfismos de listas. Apresente os cálculos que
@@ -769,18 +774,34 @@ TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇ
 \subsection*{Problema 3}
 
 \begin{code}
-inB_tree = undefined
-outB_tree = undefined
+{- Tânia isto está tudo certo -}
 
-recB_tree f = undefined
-baseB_tree g f = undefined
-cataB_tree g = undefined
-anaB_tree g = undefined
-hyloB_tree f g = undefined
+inB_tree (Left ()) = Nil
+inB_tree (Right(x, l)) = Block{leftmost = x, block = l}
+
+
+outB_tree Nil = Left ()
+outB_tree Block{leftmost = x, block = l} = Right(x,l) 
+
+
+recB_tree f = baseBTree id f
+
+
+baseB_tree g f = id -|- (f >< map(g >< f)) {- map pq é lista-} 
+
+
+cataB_tree g = g . (recBTree (cataBTree g)) . outBTree
+
+
+anaB_tree g = inBTree . (recBTree (anaBTree g) ) . g
+
+
+hyloB_tree f g = cataBTree f . anaBTree g
 
 instance Functor B_tree
          where fmap f = undefined
 
+{- ------------------------ATÉ AQUI------------------------ -}
 inordB_tree = undefined
 
 largestBlock = undefined
