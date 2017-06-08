@@ -737,6 +737,33 @@ wc_w_final = wrapper . worker
 wrapper = cataList (either (const True) (sep.p1))
 worker = cataList (either (zero) (cond (uncurry(&&).split((not sep.p1) lookahead_sep.p2)) (succ(wc_w_final.p2)) wc_w_final.p2)).outList
 -}
+
+{-  ----------------------------------------------------------------------------------------------------------------------
+
+
+TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇO ASS DIANA
+
+\def\start{&&}
+\def\just#1#2{\\ &#1& \rule{2em}{0pt} \{ \mbox{\rule[-.7em]{0pt}{1.8em} \small #2 \/} \} \nonumber\\ && }
+
+\begin{eqnarray*}
+\start
+        |p? . f|
+%
+\just={ justificação ..... }
+%
+        |alpha.(split (p.f) f)|
+%
+\just={ justificação ..... }
+%
+        |alpha.(id >< f).(split (p.f) id)|
+%
+      ---- etc -----
+%
+\end{eqnarray*}
+
+----------------------------------------------------------------------------------------------------------------------------
+-}
 \end{code}
 
 \subsection*{Problema 3}
