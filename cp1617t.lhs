@@ -280,6 +280,7 @@ Se olharmos para o código da função que, em C, implementa esta funcionalidade
 \cite{KR78} e nos focarmos apenas na parte que implementa a opção \verb!-w!,
 verificamos que a poderíamos escrever, em Haskell, da forma seguinte:
 \begin{code}
+
 wc_w :: [Char] -> Int
 wc_w []    = 0
 wc_w (c:l) =
@@ -714,6 +715,7 @@ outras funções auxiliares que sejam necessárias.
 \begin{code}
 inv x = for ( (1+) . ((1-x)*) ) 1
 
+
 {- TODO: FIX GOD DAMN QUICKCHECK NOW --Eu faço Diana  ass.Tânia
 forAll (choose (0,1)) $ \r1 ->
   forAll (choose (0,1)) $ \r2 ->
@@ -726,27 +728,60 @@ testInv =
             (inv (inv x n) n) == x
 
     (inv (inv x 5) 5) == x
+
+
+
+
+    nota: acrescentar exemplo do haskell e/ou por justificaçao por fokkinga quando se justificar este exercicio
 -}
 \end{code}
 
 \subsection*{Problema 2}
 \begin{code}
+{-
+exemplo: worker diana tania paulo diana
+        
+        (4, False)
 
-{-TODO: wc :(
-sep c = ( c == ' ' || c == '\n' || c == '\t')
-lookahead_sep []    = True
-lookahead_sep (c:l) = sep c
+        wrapper (4,False)
+        
+        4
 
+Basicamente, o wrapper só é p1 pq é responsável por
+ir buscar a primeira parte do par que é retornado pelo worker.
+-}
 wc_w_final :: [Char] -> Int
 wc_w_final = wrapper . worker
-wrapper = cataList (either (const True) (sep.p1))
-worker = cataList (either (zero) (cond (uncurry(&&).split((not sep.p1) lookahead_sep.p2)) (succ(wc_w_final.p2)) wc_w_final.p2)).outList
--}
+
+wrapper = p1
+worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k2 )  ) )
+    where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
+          k2 = sep.p1
+          
+
+
+
+{- VERSOES POINTFREE DE WC E LOOKAHEAD -}
+{- igual ao q está em cima mas é para teste por partes, como o exemplo em cima -}
+lh_pointfree :: [Char] -> Bool
+lh_pointfree = (either (const True) (sep.p1) ).outList
+
+wc_w_pointfree :: [Char] -> Int
+wc_w_pointfree = (either (const 0) h2).(id -|- id >< (split wc_w_pointfree lh_pointfree)).outList
+                  where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
+
+{- Para poder ser usado no worker wrapper, temos q definir localmente-}
+sep :: Char -> Bool
+sep c = ( c == ' ' || c == '\n' || c == '\t')
+
+
+
 
 {-  ----------------------------------------------------------------------------------------------------------------------
 
 
 TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇO ASS DIANA
+
 
 \def\start{&&}
 \def\just#1#2{\\ &#1& \rule{2em}{0pt} \{ \mbox{\rule[-.7em]{0pt}{1.8em} \small #2 \/} \} \nonumber\\ && }
