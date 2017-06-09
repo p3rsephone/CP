@@ -781,29 +781,29 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
 
 
 
-TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇO ASS DIANA
+% TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇO ASS DIANA
 
---isto é para cp1617t.sty (qd compilamos gera o sty)
-\def\start{&&}
-\def\just#1#2{\\ &#1& \rule{2em}{0pt} \{ \mbox{\rule[-.7em]{0pt}{1.8em} \small #2 \/} \} \nonumber\\ && }
+%--isto é para cp1617t.sty (qd compilamos gera o sty)
+%\def\start{&&}
+%\def\just#1#2{\\ &#1& \rule{2em}{0pt} \{ \mbox{\rule[-.7em]{0pt}{1.8em} \small #2 \/} \} \nonumber\\ && }
 
---isto é aqui neste ficheiro
+%--isto é aqui neste ficheiro
 
-\begin{eqnarray*}
-\start
-        |p? . f|
+%\begin{eqnarray*}
+%\start
+%        |p? . f|
 %
-\just={ justificação ..... }
+%\just={ justificação ..... }
 %
-        |alpha.(split (p.f) f)|
+%        |alpha.(split (p.f) f)|
 %
-\just={ justificação ..... }
+%\just={ justificação ..... }
 %
-        |alpha.(id >< f).(split (p.f) id)|
+%        |alpha.(id >< f).(split (p.f) id)|
 %
-      ---- etc -----
+%      ---- etc -----
 %
-\end{eqnarray*}
+%\end{eqnarray*}
 
 
 
