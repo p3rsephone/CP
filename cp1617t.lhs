@@ -4,6 +4,7 @@
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
 \usepackage{graphicx}
 \usepackage{cp1617t}
+\usepackage{mathtools}
 %================= lhs2tex=====================================================%
 %include polycode.fmt
 %format (div (x)(y)) = x "\div " y
@@ -712,8 +713,42 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+
 \begin{code}
-inv x = for ( (1+) . ((1-x)*) ) 1
+{-
+
+isto é p relatorio
+
+inv x 0 = 1
+inv x n =  (macL x n) + (inv x (n-1))
+  where
+    macL x 0 = 1
+    macL x n = (1-x) * macL x (n-1)
+
+
+-}
+
+
+
+
+{- inv x = for ( (1+) . ((1-x)*) ) 1 isto é p relatorio só  -}
+
+inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1)) 
+
+invcata x = p2.cataNat ( split  (either (const (1)) (((1-x)*).p1) )   (either (const (1)) ((uncurry (+)).(((1-x)*)><id)) )  ) 
+
+{- p isto funcionar c o argumento n+1 é preciso compilar com  " ghci -XNPlusKPatterns cp1617t.lhs " -}
+{- está com n+1 para ser mais fácil definir em pointfree-}
+inv_1 x 0 = 1
+inv_1 x (n+1) =  (macL x (n+1)) + (inv_1 x (n))
+  where
+    macL x 0 = 1
+    macL x (n+1) = (1-x) * macL x (n)
+
+
+
+
+
 
 
 {- TODO: FIX GOD DAMN QUICKCHECK NOW --Eu faço Diana  ass.Tânia
