@@ -819,26 +819,31 @@ outB_tree Nil = Left ()
 outB_tree Block{leftmost = x, block = l} = Right(x,l) 
 
 
-recB_tree f = baseBTree id f
+recB_tree f = baseB_tree id f
 
 
 baseB_tree g f = id -|- (f >< map(g >< f)) {- map pq é lista-} 
 
 
-cataB_tree g = g . (recBTree (cataBTree g)) . outBTree
+cataB_tree g = g . (recB_tree (cataB_tree g)) . outB_tree
 
 
-anaB_tree g = inBTree . (recBTree (anaBTree g) ) . g
+anaB_tree g = inB_tree . (recB_tree (anaB_tree g) ) . g
 
 
-hyloB_tree f g = cataBTree f . anaBTree g
+hyloB_tree f g = cataB_tree f . anaB_tree g
+
 
 instance Functor B_tree
-         where fmap f = undefined
+         where fmap f = cataB_tree ( inB_tree . baseB_tree f id )
+
+inordB_tree = cataB_tree inordB
+
+inordB = either nil join
+        where join = conc.( id >< (concat.(map (cons) ))) 
+
 
 {- ------------------------ATÉ AQUI------------------------ -}
-inordB_tree = undefined
-
 largestBlock = undefined
 
 mirrorB_tree = undefined
