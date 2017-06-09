@@ -774,17 +774,20 @@ wc_w_pointfree = (either (const 0) h2).(id -|- id >< (split wc_w_pointfree lh_po
 sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
 
+\end{code}
 
 
 
-{-  ----------------------------------------------------------------------------------------------------------------------
+
 
 
 TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇO ASS DIANA
 
-
+--isto é para cp1617t.sty (qd compilamos gera o sty)
 \def\start{&&}
 \def\just#1#2{\\ &#1& \rule{2em}{0pt} \{ \mbox{\rule[-.7em]{0pt}{1.8em} \small #2 \/} \} \nonumber\\ && }
+
+--isto é aqui neste ficheiro
 
 \begin{eqnarray*}
 \start
@@ -802,9 +805,10 @@ TANIA ISTO VAI SER PARA JUSTIFICAR OS CALCULOS Q FIZEMOS NESTE PROBLEMA, EU FAÇ
 %
 \end{eqnarray*}
 
-----------------------------------------------------------------------------------------------------------------------------
--}
-\end{code}
+
+
+
+
 
 \subsection*{Problema 3}
 
