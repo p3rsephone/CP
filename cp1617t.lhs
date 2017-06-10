@@ -864,8 +864,6 @@ inordB_tree = cataB_tree inordB
 inordB = either nil join
         where join = conc.( id >< (concat.(map (cons) )))
 
-
-{- ------------------------ATÉ AQUI------------------------ -}
 largestBlock = cataB_tree largestB
 largestB = (either (const 0) (uncurry max . (split (p1) (maximum .(cons . (split (length . p2) (auxCata.p2)))))))
           where auxCata = cataList (either (nil) (cons . (p2 >< id)))
@@ -884,6 +882,8 @@ fim :: ([a], [B_tree a]) -> (B_tree a, [(a, B_tree a)])
 mirrorB_tree bt = Block {leftmost = Block {leftmost = Nil, block = [(21,Nil),(18,Nil)]}, block = [(16,Block {leftmost = Nil, block = [(12,Nil),(9,Nil)]}),(7,Block {leftmost = Nil, block = [(6,Nil),(5,Nil),(2,Nil),(1,Nil)]})]
 -}
 
+{- ------------------------ATÉ AQUI------------------------ -}
+
 lsplitB_tree = undefined
 
 qSortB_tree = undefined
@@ -896,9 +896,9 @@ cB_tree2Exp = undefined
 \subsection*{Problema 4}
 
 \begin{code}
-anaA = undefined
+anaA ga gb = inA . (id -|- anaA ga gb >< anaB ga gb) . ga
 
-anaB = undefined
+anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \end{code}
 
 \begin{code}
