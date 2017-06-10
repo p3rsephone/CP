@@ -716,8 +716,7 @@ outras funções auxiliares que sejam necessárias.
 
 \begin{code}
 {-
-
-isto é p relatorio
+Para o relatório
 
 inv x 0 = 1
 inv x n =  (macL x n) + (inv x (n-1))
@@ -725,61 +724,35 @@ inv x n =  (macL x n) + (inv x (n-1))
     macL x 0 = 1
     macL x n = (1-x) * macL x (n-1)
 
+inv x = for ( (1+) . ((1-x)*) ) 1
 
 -}
+inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
+invcata x = p2.cataNat ( split  (either (const (1)) (((1-x)*).p1) )   (either (const (1)) ((uncurry (+)).(((1-x)*)><id)) )  )
 
-
-
-
-{- inv x = for ( (1+) . ((1-x)*) ) 1 isto é p relatorio só  -}
-
-inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1)) 
-
-invcata x = p2.cataNat ( split  (either (const (1)) (((1-x)*).p1) )   (either (const (1)) ((uncurry (+)).(((1-x)*)><id)) )  ) 
-
-{- p isto funcionar c o argumento n+1 é preciso compilar com  " ghci -XNPlusKPatterns cp1617t.lhs " -}
-{- está com n+1 para ser mais fácil definir em pointfree-}
+{- Devido ao n+1 compilar com  " ghci -XNPlusKPatterns cp1617t.lhs "
+ Fazemos com n+1 para ser mais fácil definir em pointfree -}
 inv_1 x 0 = 1
 inv_1 x (n+1) =  (macL x (n+1)) + (inv_1 x (n))
   where
     macL x 0 = 1
     macL x (n+1) = (1-x) * macL x (n)
 
+--------------------------QuickCheck-----------------------------
 
+-- Este (0.000000000000009) é o menor intervalo para 50'000 iterações
+testInv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 
-
-
-
-
-{- TODO: FIX GOD DAMN QUICKCHECK NOW --Eu faço Diana  ass.Tânia
-forAll (choose (0,1)) $ \r1 ->
-  forAll (choose (0,1)) $ \r2 ->
-   (rndListIndex idx r1 r2) < idx
-
-testInv :: Property
-testInv =
-    forAll (Test.QuickCheck.choose (1,2)) $ \x ->
-        forAll (Test.QuickCheck.choose (1,100)) $ \n ->
-            (inv (inv x n) n) == x
-
-    (inv (inv x 5) 5) == x
-
-
-
-
-    nota: acrescentar exemplo do haskell e/ou por justificaçao por fokkinga quando se justificar este exercicio
--}
 \end{code}
-
 \subsection*{Problema 2}
 \begin{code}
 {-
 exemplo: worker diana tania paulo diana
-        
+
         (4, False)
 
         wrapper (4,False)
-        
+
         4
 
 Basicamente, o wrapper só é p1 pq é responsável por
@@ -792,9 +765,6 @@ wrapper = p1
 worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k2 )  ) )
     where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
           k2 = sep.p1
-          
-
-
 
 {- VERSOES POINTFREE DE WC E LOOKAHEAD -}
 {- igual ao q está em cima mas é para teste por partes, como o exemplo em cima -}
@@ -805,9 +775,22 @@ wc_w_pointfree :: [Char] -> Int
 wc_w_pointfree = (either (const 0) h2).(id -|- id >< (split wc_w_pointfree lh_pointfree)).outList
                   where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
 
-{- Para poder ser usado no worker wrapper, temos q definir localmente-}
+{- Para poder ser usado no worker wrapper, temos que definir o sep localmente-}
 sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
+
+--------------------------QuickCheck-----------------------------
+randomWrd :: String
+randomWrd = take 10 $ randomRs ('a','z') $ unsafePerformIO newStdGen
+
+--randomStr :: String
+randomStr = elements (randomWrd ++ "\t" ++ "\n" ++ " ")
+
+newtype StringParaTestes = StringParaTestes {unwrapSafeString :: String}
+    deriving Show
+
+--testWc = wc_w_final randomStr
+
 
 \end{code}
 
@@ -848,20 +831,19 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
 \subsection*{Problema 3}
 
 \begin{code}
-{- Tânia isto está tudo certo -}
 
 inB_tree (Left ()) = Nil
 inB_tree (Right(x, l)) = Block{leftmost = x, block = l}
 
 
 outB_tree Nil = Left ()
-outB_tree Block{leftmost = x, block = l} = Right(x,l) 
+outB_tree Block{leftmost = x, block = l} = Right(x,l)
 
 
 recB_tree f = baseB_tree id f
 
 
-baseB_tree g f = id -|- (f >< map(g >< f)) {- map pq é lista-} 
+baseB_tree g f = id -|- (f >< map(g >< f)) {- map pq é lista-}
 
 
 cataB_tree g = g . (recB_tree (cataB_tree g)) . outB_tree
@@ -879,7 +861,7 @@ instance Functor B_tree
 inordB_tree = cataB_tree inordB
 
 inordB = either nil join
-        where join = conc.( id >< (concat.(map (cons) ))) 
+        where join = conc.( id >< (concat.(map (cons) )))
 
 
 {- ------------------------ATÉ AQUI------------------------ -}
