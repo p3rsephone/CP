@@ -865,8 +865,8 @@ inordB = either nil join
         where join = conc.( id >< (concat.(map (cons) )))
 
 largestBlock = cataB_tree largestB
-largestB = (either (const 0) (uncurry max . (split (p1) (maximum .(cons . (split (length . p2) (auxCata.p2)))))))
-          where auxCata = cataList (either (nil) (cons . (p2 >< id)))
+             where largestB = either (const 0) (uncurry max . (split (p1) (maximum .(cons . (split (length . p2) (auxCata.p2))))))
+                   auxCata = cataList (either (nil) (cons . (p2 >< id)))
 
 mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
                 where mir = id >< unzip
@@ -904,7 +904,10 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \begin{code}
 generateAlgae = undefined
 
-showAlgae = undefined
+showAlgae = cataA ginA ginB
+            where ginA = either (const 'A') (conc . (id >< id))
+                  ginB = either (show) (id)
+
 \end{code}
 
 \subsection*{Problema 5}
