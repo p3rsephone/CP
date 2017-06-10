@@ -831,7 +831,7 @@ newtype StringParaTestes = StringParaTestes {unwrapSafeString :: String}
 \subsection*{Problema 3}
 
 \begin{code}
-bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil), (21, Nil)]}) ]}
+bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
 
 inB_tree (Left ()) = Nil
 inB_tree (Right(x, l)) = Block{leftmost = x, block = l}
@@ -866,13 +866,15 @@ inordB = either nil join
 
 
 {- ------------------------ATÉ AQUI------------------------ -}
-largestBlock = undefined
+largestBlock = cataB_tree largestB
+largestB = (either (const 0) (uncurry max . (split (p1) (maximum .(cons . (split (length . p2) (auxCata.p2)))))))
+          where auxCata = cataList (either (nil) (cons . (p2 >< id)))
 
 mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
-              where mir = id >< unzip
-                    insere = split (p1 . p2) (cons . (split (p1) (p2.p2)))
-                    rever = split (reverse . p1) (reverse . p2)
-                    fim = split (head . p2) ((uncurry zip). (split (p1) (tail . p2)))
+                where mir = id >< unzip
+                      insere = split (p1.p2) (cons . (split (p1) (p2.p2)))
+                      rever = split (reverse . p1) (reverse . p2)
+                      fim = split (head . p2) ((uncurry zip). (split (p1) (tail . p2)))
 {-
 mir :: (B_tree a, [(a, B_tree a)]) -> ( B_tree a, ([a],[B_tree a]) )
 insere ::  ( B_tree a, ([a],[B_tree a]) ) -> ([a], [B_tree a])
