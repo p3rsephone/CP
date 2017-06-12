@@ -1167,7 +1167,7 @@ mirrorB_tree bt = Block {leftmost = Block {leftmost = Nil, block = [(21,Nil),(18
 -}
 \end{code}
 
-%passar o q está a beira do diagrama no caderno
+%passar o q está a beira do diagrama no cadernolll
 
 %------------------------ATÉ AQUI------------------------ -}
 
