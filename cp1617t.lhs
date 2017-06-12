@@ -364,6 +364,8 @@ Pretende-se, neste problema:
 \begin{code}
 dotBTree :: Show a => BTree a -> IO ExitCode
 dotBTree = dotpict . bmap nothing (Just . show) . cBTree2Exp
+
+
 \end{code}
         executando |dotBTree t| para
 \begin{quote}\small
@@ -874,7 +876,7 @@ inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 
 Nota: Teste \emph{QuickCheck}:                              
 \begin{code}
-testInv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
+prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 \end{code}
 
 
@@ -1050,16 +1052,16 @@ worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k
 Exemplo: worker diana tania paulo -> (3,False) -> wrapper (3,False) -> 3
 Nota: Teste \emph{QuickCheck}:                                      
 \begin{code}
-randomWrd :: String
-randomWrd = take 10 $ randomRs ('a','z') $ unsafePerformIO newStdGen
+genSafeChar :: Gen Char
+genSafeChar = elements $['a'..'z'] ++ "/n/t "
 
---randomStr :: String
-randomStr = elements (randomWrd ++ "\t" ++ "\n" ++ " ")
+genSafeString :: Gen String
+genSafeString = listOf genSafeChar
 
-newtype StringParaTestes = StringParaTestes {unwrapSafeString :: String}
+newtype SafeString = SafeString { unwrapSafeString :: String }
     deriving Show
 
---testWc = wc_w_final randomStr
+prop_wc = forAll genSafeString $ \str -> (wc_w_final str) == (length $ words$str)
 \end{code}
 
 %----------------------------------------------------------------------------------------------------------------------------
@@ -1184,7 +1186,9 @@ O raciocínio seguinte inclui a explicação passo a passo, usando as funções 
 \end{eqnarray*}
 
 
+
 \par Quase no fim, seria necessário definir a função \emph{quick sort} como um hilomorfismo. Isto foi conseguido através do desenho de um diagrama, e com as bibliotecas fornecidas pelos docentes. De seguida, encontra-se a solução a este problema, juntamente com o diagrama do hilomorfismo.
+
 
 \begin{code}
 lsplitB_tree []    = Left ()
@@ -1228,12 +1232,15 @@ Diagrama:
 
 \begin{code}
 dotB_tree :: (Show a) => B_tree a -> IO ExitCode
-dotB_tree = dotpict . bmap nothing (Just . show) . cB_tree2Exp
+dotB_tree = dotpict . bmap nothing (Just .init.concat.(map (++"|")).(map show)) . cB_tree2Exp
+
+func x = [x]
 
 cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
               where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
 
 \end{code}
+
 
 Código e imagem:
 \begin{center}
@@ -1243,7 +1250,6 @@ Código e imagem:
 \begin{code}
 bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Nil), (9, Nil)]}, block = [(15,Block {leftmost = Nil,block = [(10, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
 \end{code}
-
 
 %----------------------------------------------------------------------------------------------------------------------
 \subsection*{Problema 4}
@@ -1255,11 +1261,19 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \end{code}
 
 \begin{code}
-generateAlgae = undefined
+generateAlgae = anaA genA genB
+                where genA = (id -|- (split (id) (id))) . outNat
+                      genB = outNat
+
 
 showAlgae = cataA ginA ginB
             where ginA = either (const "A") (conc . (id >< id))
                   ginB = either (const "B") (id)
+
+--------------QuickCheck ----------------
+
+prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegral .fib.succ. toInteger) x
+
 \end{code}
 
 \subsection*{Problema 5}
