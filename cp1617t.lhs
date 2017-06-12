@@ -948,7 +948,7 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 \just={ Pelo enunciado, wc.nil = 0; wc.cons = cond (uncurry(&&).(split((not.sep.p1) (lh.p2) ))) ((wc.p2) + 1) (wc.p2) }
 %
   \begin{cases}
-    h1 = 0                                                                                           \\    
+    h1 = 0                                                                                           \\
     h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)  \\
 
   \end{cases}
@@ -1216,10 +1216,6 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \begin{code}
 generateAlgae = undefined
 
-{-generateAlgae = anaA ginA ginB
-                where ginA = id -|-
-                      ginB =
--}
 showAlgae = cataA ginA ginB
             where ginA = either (const "A") (conc . (id >< id))
                   ginB = either (const "B") (id)
