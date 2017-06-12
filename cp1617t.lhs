@@ -176,6 +176,7 @@ disciplina, entre outras, deve-se ao facto de, neste mesmo sítio do texto
 fonte, se ter inserido o seguinte código \Haskell:
 
 \begin{code}
+{-# OPTIONS_GHC -XNPlusKPatterns #-}
 import Cp
 import List
 import Nat
@@ -733,7 +734,7 @@ inv1 x n =  (macL x n) + (inv1 x (n-1))
     macL x n = (1-x) * macL x (n-1)
 \end{code}
 
-Esta definição teve de ser posteriormente modificada, para ser mais fácil a resolução da segunda parte do problema, e para definir em \emph{Point free}, sendo que daí resultou:  
+Esta definição teve de ser posteriormente modificada, para ser mais fácil a resolução da segunda parte do problema, e para definir em \emph{Point free}, sendo que daí resultou:
 
 \begin{code}
 inv2 x 0 = 1
@@ -752,14 +753,14 @@ inv2 x (n+1) =  (macL x (n+1)) + (inv2 x (n))
 \start
 %
   \begin{cases}
-    f.in = h.F(split f g)   \\    
+    f.in = h.F(split f g)   \\
     g.in = k.F(split f g)   \\
   \end{cases}
 %
 \just={ in=(either (const 0) succ); f=inv; g=macL; F(split f g)=F(split inv macL)=( id + (split inv macL)) }
 %
   \begin{cases}
-    inv.(either (const 0) succ) = h.( id + (split inv macL))   \\    
+    inv.(either (const 0) succ) = h.( id + (split inv macL))   \\
     macL.(either (const 0) succ) = k.( id + (split inv macL))  \\
   \end{cases}
 %
@@ -772,7 +773,7 @@ Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funç�
 \start
 %
   \begin{cases}
-    inv2 x (const 0) = 1                \\    
+    inv2 x (const 0) = 1                \\
     inv2 x succ = add.(split macL x inv2 x)   \\
   \end{cases}
 %
@@ -805,7 +806,7 @@ Do mesmo modo que se procedeu para h, segue-se a dedução de k:
 \start
 %
   \begin{cases}
-    macL x (const 0) = 1                \\    
+    macL x (const 0) = 1                \\
     macL x succ = (1-x)*(macL x)        \\
   \end{cases}
 %
@@ -828,19 +829,19 @@ Assim, \begin{eqnarray*}
   |k = ( either (const 1) ( ((1-x)*).p1 ) )|
 \end{eqnarray*}
 
-Ora, pela Lei de \emph{Fokkinga}, podemos concluir que 
+Ora, pela Lei de \emph{Fokkinga}, podemos concluir que
 
 \begin{eqnarray*}
 \start
 %
   \begin{cases}
-    inv.(either (const 0) succ) = h.( id + (split inv macL))   \\    
+    inv.(either (const 0) succ) = h.( id + (split inv macL))   \\
     macL.(either (const 0) succ) = k.( id + (split inv macL))  \\
   \end{cases}
 %
 \just={ Fokkinga }
 %
-   |split (inv) (macL) = cata( split h k )| 
+   |split (inv) (macL) = cata( split h k )|
 \end{eqnarray*}
 
 
@@ -873,7 +874,7 @@ inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 
 Nota: Teste \emph{QuickCheck}:                              %------------------QUICKCHECK-------------------
 \begin{code}
-testInv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
+prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 \end{code}
 
 %\end{comment}
@@ -905,28 +906,28 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
 \start
 %
   \begin{cases}
-    f.in = h.F(split f g)   \\    
+    f.in = h.F(split f g)   \\
     g.in = k.F(split f g)   \\
   \end{cases}
 %
 \just={ in=(either nil cons); f=wc; g=lh; F(split f g)=F(split wc lh)=( id + id >< (split wc lh)) }
 %
   \begin{cases}
-    wc.(either nil cons) = h.( id + id >< (split wc lh))   \\    
+    wc.(either nil cons) = h.( id + id >< (split wc lh))   \\
     lh.(either nil cons) = k.( id + id >< (split wc lh))   \\
   \end{cases}
 %
 \just={ Reflexão-+; h=(either h1 h2); k=(either k1 k2)}
 %
   \begin{cases}
-    wc.(either nil cons) = (either h1 h2).( id + id >< (split wc lh))   \\    
+    wc.(either nil cons) = (either h1 h2).( id + id >< (split wc lh))   \\
     lh.(either nil cons) = (either k1 k2).( id + id >< (split wc lh))   \\
   \end{cases}
 %
 \just={ Fusão-+; Absorção-+; Natural-id }
 %
   \begin{cases}
-    either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))   \\    
+    either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))   \\
     either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))   \\
   \end{cases}
 \end{eqnarray*}
@@ -940,7 +941,7 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 \just={ Eq-+ }
 %
   \begin{cases}
-    wc.nil = h1                         \\    
+    wc.nil = h1                         \\
     wc.cons = h2.(id >< (split wc lh))  \\
   \end{cases}
 %
@@ -949,6 +950,7 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
   \begin{cases}
     h1 = 0                                                                                           \\    
     h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)  \\
+
   \end{cases}
 \end{eqnarray*}
 
@@ -998,14 +1000,14 @@ Depois de tudo isto, falta ainda provar a segunda condição:
 \just={ Eq-+ }
 %
   \begin{cases}
-    lh.nil = k1                         \\    
+    lh.nil = k1                         \\
     lh.cons = k2.(id >< (split wc lh))  \\
   \end{cases}
 %
 \just={ Pelo enunciado, lh.nil = true, lh.cons = sep.p1 }
 %
   \begin{cases}
-    k1 = true                          \\    
+    k1 = true                          \\
     k2.(id >< (split wc lh)) = sep.p1  \\
   \end{cases}
 \end{eqnarray*}
@@ -1204,6 +1206,8 @@ bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Ni
 \subsection*{Problema 4}
 
 \begin{code}
+alga = A (A NA NB) (B NA)
+
 anaA ga gb = inA . (id -|- anaA ga gb >< anaB ga gb) . ga
 
 anaB ga gb = inB . (id -|- anaA ga gb) . gb
@@ -1211,13 +1215,14 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 
 \begin{code}
 generateAlgae = undefined
-showAlgae = undefined
 
-{-
-showAlgae = cataA ginA ginB
-            where ginA = either (const 'A') (conc . (id >< id))
-                  ginB = either (show) (id)
+{-generateAlgae = anaA ginA ginB
+                where ginA = id -|-
+                      ginB =
 -}
+showAlgae = cataA ginA ginB
+            where ginA = either (const "A") (conc . (id >< id))
+                  ginB = either (const "B") (id)
 \end{code}
 
 \subsection*{Problema 5}
