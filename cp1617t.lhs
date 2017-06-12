@@ -721,7 +721,7 @@ outras funções auxiliares que sejam necessárias.
 \subsection*{Problema 1}
 %Falar ao professor disto:
 %inv x = for ( (1+) . ((1-x)*) ) 1
-%\begin{comment}
+
 
 \par A resolução deste problema consistiu essencialmente em três partes: a definição de \emph{inv x} como uma função em \emph{Haskell}, todo o raciocínio envolvente até chegar à solução final (com o auxílio da Lei \emph{Fokkinga}), e a conversão da solução para um ciclo-\emph{for}, tal como era pedido no enunciado.
 \par Assim, e como primeira tarefa, resultou a seguinte definição de \emph{inv x}:
@@ -872,12 +872,12 @@ Finalmente, obtemos a solução ao problema,
 inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 \end{code}
 
-Nota: Teste \emph{QuickCheck}:                              %------------------QUICKCHECK-------------------
+Nota: Teste \emph{QuickCheck}:                              
 \begin{code}
 testInv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 \end{code}
 
-%\end{comment}
+
 %----------------------------------------------------------------------------------------------------------------------------
 
 \subsection*{Problema 2}
@@ -893,7 +893,7 @@ wc_w_pointfree :: [Char] -> Int
 wc_w_pointfree = (either (const 0) h2).(id -|- id >< (split wc_w_pointfree lh_pointfree)).outList
                   where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
 
-{- Para poder ser usado no worker wrapper, temos que definir o sep localmente-}
+
 sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
 \end{code}
@@ -915,18 +915,18 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
     lh.(either nil cons) = k.( id + id >< (split wc lh))   \\
   \end{cases}
 %
-\just={ Reflexão-+; h=(either h1 h2); k=(either k1 k2)}
+\just={ Def-+ (x2) }
 %
   \begin{cases}
-    wc.(either nil cons) = (either h1 h2).( id + id >< (split wc lh))   \\
-    lh.(either nil cons) = (either k1 k2).( id + id >< (split wc lh))   \\
+    wc.(either nil cons) = h.(either (i1.id) ((i2.id)><(split wc lh)) )   \\
+    lh.(either nil cons) = k.(either (i1.id) ((i2.id)><(split wc lh)) )   \\
   \end{cases}
 %
-\just={ Fusão-+; Absorção-+; Natural-id }
+\just={ Fusão-+; Natural-id }
 %
   \begin{cases}
-    either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))   \\
-    either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))   \\
+    wc.(either nil cons) = (either (h.i1) ((h.i2)><(split wc lh)) )   \\
+    lh.(either nil cons) = (either (k.i1) ((k.i2)><(split wc lh)) )   \\
   \end{cases}
 \end{eqnarray*}
 
@@ -934,16 +934,16 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 
 \begin{eqnarray*}
 \start
-  |either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))|
+  |either (wc.nil) (wc.cons) = (either (h.i1) ((h.i2)><(split wc lh)) ) |
 %
 \just={ Eq-+ }
 %
   \begin{cases}
-    wc.nil = h1                         \\
-    wc.cons = h2.(id >< (split wc lh))  \\
+    wc.nil = h.i1                          \\
+    wc.cons = (h.i2).(id >< (split wc lh))  \\
   \end{cases}
 %
-\just={ Pelo enunciado, wc.nil = 0, wc.cons = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2)) }
+\just={ Pelo enunciado, wc.nil = 0, wc.cons = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2)); h=(either h1 h2) }
 %
   \begin{cases}
     h1 = 0                                                                                           \\
@@ -951,6 +951,7 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 
   \end{cases}
 \end{eqnarray*}
+
 
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
 \begin{eqnarray*}
@@ -989,9 +990,9 @@ Depois de tudo isto, falta ainda provar a segunda condição:
 
 \begin{eqnarray*}
 \start
-  |either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))|
+  |(either (lh.nil) (lh.cons) ) = (either (k.i1) ((k.i2)><(split wc lh)) )|
 %
-\just={ Eq-+ }
+\just={ Eq-+; COmo já provamos, k será k=(either k1 k2)}
 %
   \begin{cases}
     lh.nil = k1                         \\
@@ -1031,6 +1032,7 @@ Conclui-se assim que
   |h = either ( const True ) ( sep.p1 )|
 \end{eqnarray*}
 
+
 Finalmente, segue-se a solução final deste problema e um exemplo (ou teste no terminal) de como o \emph{|worker|/|wrapper|} funcionaria.
 
 \begin{code}
@@ -1046,7 +1048,7 @@ worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k
 
 
 Exemplo: worker diana tania paulo -> (3,False) -> wrapper (3,False) -> 3
-Nota: Teste \emph{QuickCheck}:                                      %------------------QUICKCHECK-------------------
+Nota: Teste \emph{QuickCheck}:                                      
 \begin{code}
 randomWrd :: String
 randomWrd = take 10 $ randomRs ('a','z') $ unsafePerformIO newStdGen
@@ -1097,7 +1099,7 @@ instance Functor B_tree
 \end{code}
 
 
-De seguida, era necessário definir a função \emph{inorder}, adequada para este tipo de dados, como um catamorfismo. Através do seguinte diagrama, foi conseguido um raciocínio claro que permitiu chegar à solução, também apresentada a seguir:
+\par De seguida, era necessário definir a função \emph{inorder}, adequada para este tipo de dados, como um catamorfismo. Através do seguinte diagrama, foi conseguido um raciocínio claro que permitiu chegar à solução, também apresentada a seguir:
 
 \begin{code}
 
@@ -1123,7 +1125,7 @@ inordB = either nil join
            \ar[l]^-{|inord|}
 }
 
-Era também pedida a definição da função \emph{largest Block} como um catamorfismo. Mais uma vez, através do auxílio de um diagrama, o problema foi resolvido, e ambos apresentam-se em baixo:
+\par Era também pedida a definição da função \emph{largest Block} como um catamorfismo. Mais uma vez, através do auxílio de um diagrama, o problema foi resolvido, e ambos apresentam-se em baixo:
 
 
 \begin{code}
@@ -1148,7 +1150,7 @@ largestBlock = cataB_tree largestB
            \ar[l]^-{|largestB|}
 }
 
-Desta vez, era requerida a definição da função \emph{mirror} como um anamorfismo. O anamorfismo foi conseguido através de várias funções auxiliares, resultando num código mais legível e de mais fácil compreensão. De seguida encontra-se a solução proposta, tal como um esquema que representa o raciocínio que o grupo teve.
+\par Desta vez, era requerida a definição da função \emph{mirror} como um anamorfismo. O anamorfismo foi conseguido através de várias funções auxiliares, resultando num código mais legível e de mais fácil compreensão. De seguida encontra-se a solução proposta, tal como um esquema que representa o raciocínio que o grupo teve.
 
 \begin{code}
 mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
@@ -1156,23 +1158,35 @@ mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
                       insere = split (p1.p2) (cons . (split (p1) (p2.p2)))
                       rever = split (reverse . p1) (reverse . p2)
                       fim = split (head . p2) ((uncurry zip). (split (p1) (tail . p2)))
-
-{-}
-mir :: (B_tree a, [(a, B_tree a)]) -> ( B_tree a, ([a],[B_tree a]) )
-insere ::  ( B_tree a, ([a],[B_tree a]) ) -> ([a], [B_tree a])
-rever :: ([a], [B_tree a]) -> ([a], [B_tree a])
-fim :: ([a], [B_tree a]) -> (B_tree a, [(a, B_tree a)])
-
-mirrorB_tree bt = Block {leftmost = Block {leftmost = Nil, block = [(21,Nil),(18,Nil)]}, block = [(16,Block {leftmost = Nil, block = [(12,Nil),(9,Nil)]}),(7,Block {leftmost = Nil, block = [(6,Nil),(5,Nil),(2,Nil),(1,Nil)]})]
--}
 \end{code}
 
-%passar o q está a beira do diagrama no cadernolll
 
-%------------------------ATÉ AQUI------------------------ -}
+O raciocínio seguinte inclui a explicação passo a passo, usando as funções acima, que o grupo seguiu, a partir dos tipos de dados necessários para a resolução do exercício.
+\begin{eqnarray*}
+\start
+  |1 + (B_tree a >< (a >< B_tree a)*)|
+%
+\just={ mir }
+%
+  |1 + (B_tree a >< (a* >< B_tree a*))|
+%
+\just={ insere }
+%
+  |1 + (a* >< B_tree a*)|
+%
+\just={ rever }
+%
+  |1 + (B_tree a >< (a* >< B_tree a*))|
+%
+\just={ fim }
+%
+|1 + (B_tree a >< (a >< B_tree a)*)|
+\end{eqnarray*}
+
+
+\par Quase no fim, seria necessário definir a função \emph{quick sort} como um hilomorfismo. Isto foi conseguido através do desenho de um diagrama, e com as bibliotecas fornecidas pelos docentes. De seguida, encontra-se a solução a este problema, juntamente com o diagrama do hilomorfismo.
 
 \begin{code}
-
 lsplitB_tree []    = Left ()
 lsplitB_tree (h:t) = Right (s,[(h,l)]) where (s,l) = part1 (<h) t
 
@@ -1184,40 +1198,51 @@ part1 p (h:t) | p h       = let (s,l) = part1 p t in (h:s,l)
 
 qSortB_tree :: Ord a => [a] -> [a]
 qSortB_tree = hyloB_tree inordB lsplitB_tree
---------------------------------------------------------------------------------
+\end{code}
 
+Diagrama:
+ \xymatrix@@C=3cm{
+    |A*|
+           \ar[d]_-{|ana lsplitB|}
+            \ar[r]^-{|lsplitB|}
+&
+    |1 + A* \times (A \times A*)*|
+           \ar[d]^{|id +((ana lsplitB) \times map(id \times ana lsplitB))|}
+\\
+     |B|
+        \ar[d]_-{|cata inordB|}
+        \ar[r]^-{|outB|}
+&
+     |1 + B \times (A \times B)*|
+           \ar[l]^-{|inB|}
+            \ar[d]^{|id +((cata inordB) \times map(id \times cata inordB))|}
+\\
+    |A*|
+&
+    |1 + A* \times (A \times A*)*|
+        \ar[l]_-{|lsplitB|}
+}
+
+\par Finalmente, era requerido que fosse definida a função \emph{dotB-tree}, que permitia mostrar em Graphviz árvores \emph{B-tree}. Segue-se a solução definitiva e uma imagem de exemplo com o respetivo código.
+
+
+\begin{code}
 dotB_tree :: (Show a) => B_tree a -> IO ExitCode
 dotB_tree = dotpict . bmap nothing (Just . show) . cB_tree2Exp
 
 cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
               where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-bt2 = Node (6,(Node (3,(Node (2,(Empty,Empty)),Empty)),Node (7,(Empty,Node (9,(Empty,Empty))))))
-
-bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
-
-
-{-
-bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
--}
 \end{code}
 
+Código e imagem:
+\begin{center}
+       \includegraphics[width=0.9\textwidth]{cp1617t_media/nossa.png}
+\end{center}
 
+\begin{code}
+bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Nil), (9, Nil)]}, block = [(15,Block {leftmost = Nil,block = [(10, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
+\end{code}
 
 
 %----------------------------------------------------------------------------------------------------------------------
