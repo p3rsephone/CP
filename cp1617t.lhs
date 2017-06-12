@@ -748,9 +748,9 @@ inv2 x (n+1) =  (macL x (n+1)) + (inv2 x (n))
 
 
 \begin{eqnarray*}
-
+%
 \start
-
+%
   \begin{cases}
     f.in = h.F(split f g)   \\    
     g.in = k.F(split f g)   \\
@@ -762,15 +762,15 @@ inv2 x (n+1) =  (macL x (n+1)) + (inv2 x (n))
     inv.(either (const 0) succ) = h.( id + (split inv macL))   \\    
     macL.(either (const 0) succ) = k.( id + (split inv macL))  \\
   \end{cases}
-
+%
 \end{eqnarray*}
 
 Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funções inv e macL. Segue-se a dedução de h:
 
 \begin{eqnarray*}
-
+%
 \start
-
+%
   \begin{cases}
     inv2 x (const 0) = 1                \\    
     inv2 x succ = add.(split macL x inv2 x)   \\
@@ -778,33 +778,32 @@ Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funç�
 %
 \just={ Universal-+ }
 %
-    inv2 x (either (const 0) succ) = either (const 1) (add.(split (macL x) (inv2 x)))
+    |inv2 x (either (const 0) succ) = either (const 1) (add.(split (macL x) (inv2 x)))|
 %
 \just={ Natural-id; Definição de macL x }
 %
-    inv2 x (either (const 0) succ) = either ((const 1).id) (add.(split ( ((1-x)*) macL x (n) ) (inv2 x)))
+    |inv2 x (either (const 0) succ) = either ((const 1).id) (add.(split ( ((1-x)*) macL x (n) ) (inv2 x)))|
 %
 \just={ Absorção-x }
 %
-    inv2 x (either (const 0) succ) = either ((const 1).id) (add.(((1-x)*) >< id).(split (macL x) (inv2 x) ))
+    |inv2 x (either (const 0) succ) = either ((const 1).id) (add.(((1-x)*) >< id).(split (macL x) (inv2 x) ))|
 %
 \just={ Absorção-+}
 %
-    inv2 x (either (const 0) succ) = ( either (const 1) ( add.( ((1-x)*) >< id)) ).(id + (split (macL x) (inv2 x)))
-
+    |inv2 x (either (const 0) succ) = ( either (const 1) ( add.( ((1-x)*) >< id)) ).(id + (split (macL x) (inv2 x)))|
+%
 \end{eqnarray*}
 
 Logo, \begin{eqnarray*}
-h = ( either (const 1) ( add.( ((1-x)*) >< id)) )
+  |h = ( either (const 1) ( add.( ((1-x)*) >< id)) )|
 \end{eqnarray*}
 
 
 Do mesmo modo que se procedeu para h, segue-se a dedução de k:
 
 \begin{eqnarray*}
-
 \start
-
+%
   \begin{cases}
     macL x (const 0) = 1                \\    
     macL x succ = (1-x)*(macL x)        \\
@@ -812,28 +811,28 @@ Do mesmo modo que se procedeu para h, segue-se a dedução de k:
 %
 \just={ Universal-+ }
 %
-    macL x (either (const 0) succ) = either (const 1) ( (1-x)*(macL x) )
+    |macL x (either (const 0) succ) = either (const 1) ( (1-x)*(macL x) )|
 %
 \just={ Natural-id; Cancelamento-x }
 %
-    inv2 x (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))
+    |inv2 x (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))|
 %
 \just={ Absorção-+}
 %
-    inv2 x (either (const 0) succ) = ( either (const 1) ( ((1-x)*).p1 )).(id + (split (macL x) (inv2 x)))
-
+    |inv2 x (either (const 0) succ) = ( either (const 1) ( ((1-x)*).p1 )).(id + (split (macL x) (inv2 x)))|
+%
 \end{eqnarray*}
 
 
 Assim, \begin{eqnarray*}
-k = ( either (const 1) ( ((1-x)*).p1 ) )
+  |k = ( either (const 1) ( ((1-x)*).p1 ) )|
 \end{eqnarray*}
 
 Ora, pela Lei de \emph{Fokkinga}, podemos concluir que 
 
 \begin{eqnarray*}
 \start
-
+%
   \begin{cases}
     inv.(either (const 0) succ) = h.( id + (split inv macL))   \\    
     macL.(either (const 0) succ) = k.( id + (split inv macL))  \\
@@ -841,7 +840,7 @@ Ora, pela Lei de \emph{Fokkinga}, podemos concluir que
 %
 \just={ Fokkinga }
 %
-   split (inv) (macL) = cata( split h k ) 
+   |split (inv) (macL) = cata( split h k )| 
 \end{eqnarray*}
 
 
@@ -855,23 +854,21 @@ invcata x = p2.cataNat ( split  (either (const (1)) (((1-x)*).p1) )   (either (c
 
 \begin{eqnarray*}
 \start
-         split (h) (k)
+         |split (h) (k)|
 %
 \just={ Definição de h e k }
 %
-        split (either (const 1) (((1-x)*) >< id) ) (either (const 1) ( ((1-x)*).p1 ) )
+        |split (either (const 1) (((1-x)*) >< id) ) (either (const 1) ( ((1-x)*).p1 ) )|
 %
 \just={ Lei da Troca }
 %
-        either (split (const 1) (const 1)) (split (((1-x)*) >< id) ( ((1-x)*).p1 ) )
-
+        |either (split (const 1) (const 1)) (split (((1-x)*) >< id) ( ((1-x)*).p1 ) )|
+%
 \end{eqnarray*}
 
 Finalmente, obtemos a solução ao problema,
 \begin{code}
-
 inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
-
 \end{code}
 
 Nota: Teste \emph{QuickCheck}:                              %------------------QUICKCHECK-------------------
@@ -903,9 +900,8 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
 \par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc_w} para \emph{wc} e da função \emph{lookahead_sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
 
 \begin{eqnarray*}
-
 \start
-
+%
   \begin{cases}
     f.in = h.F(split f g)   \\    
     g.in = k.F(split f g)   \\
@@ -931,14 +927,13 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
     either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))   \\    
     either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))   \\
   \end{cases}
-
 \end{eqnarray*}
 
 Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema. Comecemos pela primeira condição:
 
 \begin{eqnarray*}
 \start
-  either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))
+  |either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))|
 %
 \just={ Eq-+ }
 %
@@ -947,49 +942,48 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
     wc.cons = h2.(id >< (split wc lh))  \\
   \end{cases}
 %
-\just={ Pelo enunciado, wc.nil = 0, wc.cons = (not.sep.p1 && lh.p2) -> (wc.p2 +1) , (wc.p2) }
+\just={ Pelo enunciado, wc.nil = 0, wc.cons = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2)) }
 %
   \begin{cases}
     h1 = 0                                                                    \\    
-    h2.(id >< (split wc lh)) = (not.sep.p1 && lh.p2) -> (wc.p2 +1) , (wc.p2)  \\
+    h2.(id >< (split wc lh)) = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2))  \\
   \end{cases}
-
 \end{eqnarray*}
 
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
 \begin{eqnarray*}
 \start
-  h2.(id >< (split wc lh)) = (not.sep.p1 && lh.p2) -> (wc.p2 +1) , (wc.p2)
+  |h2.(id >< (split wc lh)) = cond ((not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2))|
 %
 \just={ "Tradução" da condição anterior para uma linguagem mais adequada a Cálculo de Programas }
 %
-  h2.(id >< (split wc lh)) = ((uncurry(&&)).(split (not.sep.p1) (lh.p2) )) -> (wc.p2 +1) , (wc.p2)
+  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (lh.p2) )) (wc.p2 +1) (wc.p2)|
 %
 \just={ Cancelamento-x; Definição de succ }
 %
-  h2.(id >< (split wc lh)) = ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) -> succ.p1.(split wc lh).p2 , p1.split wc lh).p2
+  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.split wc) lh).p2|
 %
 \just={ Fusão-x; Reflexão-x; Natural-p1; Natural-p2; Cancelamento-x }
 %
-  h2.(id><(split wc lh)) = ((uncurry(&&)).((not sep)><(p2.(split wc lh))))->(succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))
+  |h2.(id><(split wc lh)) = cond ((uncurry(&&)).((not sep)><(p2.(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
 \just={ Functor-x }
 %
-  h2.(id><(split wc lh)) = ((uncurry(&&)).(((not sep.p1)><p2).(id><(split wc lh))))->(succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))
+  |h2.(id><(split wc lh)) = cond ((uncurry(&&)).(((not sep.p1)><p2).(id><(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
 \just={ 2ªLei de fusão do condicional; Lei de Leibniz }
 %
-  h2 = ((uncurry(&&)).((not.sep) >< p2)) -> (succ.p1.p2) , (p1.p2)
+  |h2 = cond ((uncurry(&&)).((not.sep) >< p2)) (succ.p1.p2) (p1.p2)|
 \end{eqnarray*}
 
 Conclui-se assim que
 \begin{eqnarray*}
 \start
-  h = either h1 h2
+  |h = either h1 h2|
 %
 \just={ Definição de h1 e h2 }
 %
-  h = either ( const 0 ) (cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2))
+  |h = either ( const 0 ) (cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2))|
 \end{eqnarray*}
 
 
@@ -997,7 +991,7 @@ Depois de tudo isto, falta ainda provar a segunda condição:
 
 \begin{eqnarray*}
 \start
-  either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))
+  |either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))|
 %
 \just={ Eq-+ }
 %
@@ -1012,33 +1006,31 @@ Depois de tudo isto, falta ainda provar a segunda condição:
     k1 = true                          \\    
     k2.(id >< (split wc lh)) = sep.p1  \\
   \end{cases}
-
 \end{eqnarray*}
 
 Para descobrir k2 é necessária a Lei de Leibniz, usadas na seguinte prova:
 
 \begin{eqnarray*}
 \start
-  k2.(id >< (split wc lh)) = sep.p1
+  |k2.(id >< (split wc lh)) = sep.p1|
 %
 \just={ Natural-p1 }
 %
-  k2.(id >< (split wc lh)) = sep.p1.(id >< (split wc lh))
+  |k2.(id >< (split wc lh)) = sep.p1.(id >< (split wc lh))|
 %
 \just={ Natural-id; Lei de Leibniz }
 %
-k2 = sep.p1
-
+|k2 = sep.p1|
 \end{eqnarray*}
 
 Conclui-se assim que
 \begin{eqnarray*}
 \start
-  k = either k1 k2
+  |k = either k1 k2|
 %
 \just={ Definição de k1 e k2 }
 %
-  h = either ( const True ) ( sep.p1 ) 
+  |h = either ( const True ) ( sep.p1 )|
 \end{eqnarray*}
 
 Finalmente, segue-se a solução final deste problema e um exemplo (ou teste no terminal) de como o \emph{|worker|/|wrapper|} funcionaria.
@@ -1198,7 +1190,7 @@ cB_tree2Exp = undefined
 
 
 
-{-}
+{-
 bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
 -}
 \end{code}
