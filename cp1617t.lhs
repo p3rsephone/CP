@@ -1216,26 +1216,28 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 
 \begin{code}
 generateAlgae = anaA genA genB
-                where genA = (id -|- (split (id) (id))) . outNat
+                where genA = (id -|- dup) . outNat
                       genB = outNat
 
 
 showAlgae = cataA ginA ginB
-            where ginA = either (const "A") (conc . (id >< id))
+            where ginA = either (const "A") (conc)
                   ginB = either (const "B") (id)
 
 --------------QuickCheck ----------------
 
-prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegral .fib.succ. toInteger) x
+prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegral.fib.succ.toInteger) x
 
 \end{code}
 
 \subsection*{Problema 5}
 
 \begin{code}
-permuta = undefined
+permuta [] = return []
+permuta x = do {(a,b) <- getR x; c <-permuta b ;return (a:c)}
 
-eliminatoria = undefined
+eliminatoria (Leaf z) =  return z
+eliminatoria(Fork (a,b)) = do {sortA <- eliminatoria a; sortB <- eliminatoria b; jogo(sortA,sortB)}
 \end{code}
 %----------------- Fim do anexo cpm soluções propostas ------------------------%
 
