@@ -8,6 +8,9 @@
 \usepackage[all]{xy}
 %================= lhs2tex=====================================================%
 %include polycode.fmt
+%format (cata g)= "\cata{" g "}"
+%format (ana g)= "\ana{" g "}"
+%format (cataNat g)= "\cata{" g "}"
 %format (div (x)(y)) = x "\div " y
 %format succ = "\succ "
 %format map = "\map "
@@ -719,7 +722,7 @@ alterados os nomes das funções dadas, mas pode ser adicionado texto e / ou
 outras funções auxiliares que sejam necessárias.
 
 %------------------------------------------------------------------------------------------------------------------------
-
+\pagebreak
 \subsection*{Problema 1}
 %Falar ao professor disto:
 %inv x = for ( (1+) . ((1-x)*) ) 1
@@ -768,32 +771,32 @@ inv2 x (n+1) =  (macL x (n+1)) + (inv2 x (n))
 %
 \end{eqnarray*}
 
-Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funções inv e macL. Segue-se a dedução de h:
+Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funções inv e macL. Segue-se a dedução de h, a partir de \emph{inv x}:
 
 \begin{eqnarray*}
 %
 \start
 %
   \begin{cases}
-    |inv2 x (const 0) = 1|                         \\
-    |inv2 x succ = add.(split (macL x) (inv2 x))|   \\
+    |inv2 x . (const 0) = 1|                         \\
+    |inv2 x . succ = add.(split (macL x) (inv2 x))|   \\
   \end{cases}
 %
-\just={ Universal-+ }
+\just={ |Universal-+| }
 %
-    |inv2 x (either (const 0) succ) = either (const 1) (add.(split (macL x) (inv2 x)))|
+    |inv2 x . (either (const 0) succ) = either (const 1) (add.(split (macL x) (inv2 x)))|
 %
 \just={ |Natural-id|; Definição de macL x }
 %
-    |inv2 x (either (const 0) succ) = either ((const 1).id) (add.(split ( ((1-x)*) macL x (n) ) (inv2 x)))|
+    |inv2 x . (either (const 0) succ) = either ((const 1).id) (add.(split ( ((1-x)*) macL x ) (inv2 x)))|
 %
-\just={ Absorção-x }
+\just={ |Absorção-x| }
 %
-    |inv2 x (either (const 0) succ) = either ((const 1).id) (add.(((1-x)*) >< id).(split (macL x) (inv2 x) ))|
+    |inv2 x . (either (const 0) succ) = either ((const 1).id) (add.(((1-x)*) >< id).(split (macL x) (inv2 x) ))|
 %
-\just={ Absorção-+}
+\just={ |Absorção-+| }
 %
-    |inv2 x (either (const 0) succ) = ( either (const 1) ( add.( ((1-x)*) >< id)) ).(id + (split (macL x) (inv2 x)))|
+    |inv2 x . (either (const 0) succ) = ( either (const 1) ( add.( ((1-x)*) >< id)) ).(id + (split (macL x) (inv2 x)))|
 %
 \end{eqnarray*}
 
@@ -801,28 +804,28 @@ Logo, \begin{eqnarray*}
   |h = ( either (const 1) ( add.( ((1-x)*) >< id)) )|
 \end{eqnarray*}
 
-
+\pagebreak
 Do mesmo modo que se procedeu para h, segue-se a dedução de k:
 
 \begin{eqnarray*}
 \start
 %
   \begin{cases}
-    |macL x (const 0) = 1|                \\
-    |macL x succ = (1-x)*(macL x)|        \\
+    |macL x . (const 0) = 1|                \\
+    |macL x . succ = (1-x)*(macL x)|        \\
   \end{cases}
 %
-\just={ Universal-+ }
+\just={ |Universal-+| }
 %
-    |macL x (either (const 0) succ) = either (const 1) ( (1-x)*(macL x) )|
+    |macL x . (either (const 0) succ) = either (const 1) ( (1-x)*(macL x) )|
 %
-\just={ |Natural-id|; Cancelamento-x }
+\just={ |Natural-id|; |Cancelamento-x| }
 %
-    |inv2 x (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))|
+    |macL x . (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))|
 %
-\just={ Absorção-+}
+\just={ |Absorção-+| }
 %
-    |inv2 x (either (const 0) succ) = ( either (const 1) ( ((1-x)*).p1 )).(id + (split (macL x) (inv2 x)))|
+    |macL x . (either (const 0) succ) = ( either (const 1) ( ((1-x)*).p1 )).(id + (split (macL x) (inv2 x)))|
 %
 \end{eqnarray*}
 
@@ -861,11 +864,11 @@ invcata x = p2.cataNat ( split  (either (const (1)) (((1-x)*).p1) )   (either (c
 %
 \just={ Definição de h e k }
 %
-        |split (either (const 1) (((1-x)*) >< id) ) (either (const 1) ( ((1-x)*).p1 ) )|
+        |split (either (const 1) ( (add.((1-x)*)) >< id) ) (either (const 1) ( ((1-x)*).p1 ) )|
 %
 \just={ Lei da Troca }
 %
-        |either (split (const 1) (const 1)) (split (((1-x)*) >< id) ( ((1-x)*).p1 ) )|
+        |either (split (const 1) (const 1)) (split (( add.((1-x)*) >< id)) ( ((1-x)*).p1 ) )|
 %
 \end{eqnarray*}
 
@@ -884,8 +887,8 @@ prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.00000000000
 \pagebreak
 \subsection*{Problema 2}
 
-\par Para o problema 2 era requerido que fosse definida a função \emph{wc c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instância, foram definidas as funções \emph{wc c}, \emph{lookahead sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
-\par Antes de mais, são apresentadas a seguir as definições das funções acima mencionadas, mais a definição de \emph{sep}, que foram usadas para testes e para clarificar a linha de raciocínio do grupo antes da resolução do problema:
+\par Para o problema 2 era requerido que fosse definida a função \emph{wc c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instância, foram definidas as funções \emph{wc c} e \emph{lookahead sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
+\par Antes de mais, são apresentadas as definições das funções acima mencionadas, mais a definição de \emph{sep}, que foram usadas para testes e para clarificar a linha de raciocínio do grupo antes da resolução do problema:
 
 \begin{code}
 lh_pointfree :: [Char] -> Bool
@@ -900,7 +903,7 @@ sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
 \end{code}
 
-\par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc w} para \emph{wc} e da função \emph{lookahead sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
+\par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga, como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc w} para \emph{wc} e da função \emph{lookahead sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
 
 \begin{eqnarray*}
 \start
@@ -953,7 +956,7 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
   \end{cases}
 \end{eqnarray*}
 
-
+\pagebreak
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
 \begin{eqnarray*}
 \start
