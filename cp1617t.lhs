@@ -1157,7 +1157,7 @@ mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
                       rever = split (reverse . p1) (reverse . p2)
                       fim = split (head . p2) ((uncurry zip). (split (p1) (tail . p2)))
 
-{-}
+{-
 mir :: (B_tree a, [(a, B_tree a)]) -> ( B_tree a, ([a],[B_tree a]) )
 insere ::  ( B_tree a, ([a],[B_tree a]) ) -> ([a], [B_tree a])
 rever :: ([a], [B_tree a]) -> ([a], [B_tree a])
@@ -1167,9 +1167,9 @@ mirrorB_tree bt = Block {leftmost = Block {leftmost = Nil, block = [(21,Nil),(18
 -}
 \end{code}
 
-%passar o q está a beira do diagrama no cadernolll
+%passar o q está a beira do diagrama no caderno
 
-%------------------------ATÉ AQUI------------------------ -}
+%------------------------ATÉ AQUI------------------------
 
 \begin{code}
 
@@ -1187,30 +1187,17 @@ qSortB_tree = hyloB_tree inordB lsplitB_tree
 --------------------------------------------------------------------------------
 
 dotB_tree :: (Show a) => B_tree a -> IO ExitCode
-dotB_tree = dotpict . bmap nothing (Just . show) . cB_tree2Exp
+dotB_tree = dotpict . bmap nothing (Just .show) . cB_tree2Exp
 
 cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
               where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+func [] = []
+func [x] = [x]
+func (h:t) = (h++"|"):(func t)
 
 
 bt2 = Node (6,(Node (3,(Node (2,(Empty,Empty)),Empty)),Node (7,(Empty,Node (9,(Empty,Empty))))))
-
-bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
-
 
 {-
 bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (2, Nil), (5, Nil), (6, Nil)]}, block = [(7,Block {leftmost = Nil,block = [(9, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
