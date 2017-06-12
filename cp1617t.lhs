@@ -788,7 +788,7 @@ Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funç�
 %
     |inv2 x (either (const 0) succ) = either ((const 1).id) (add.(((1-x)*) >< id).(split (macL x) (inv2 x) ))|
 %
-\just={ Absorção-+}
+\just={ Absorção-+ }
 %
     |inv2 x (either (const 0) succ) = ( either (const 1) ( add.( ((1-x)*) >< id)) ).(id + (split (macL x) (inv2 x)))|
 %
@@ -817,7 +817,7 @@ Do mesmo modo que se procedeu para h, segue-se a dedução de k:
 %
     |inv2 x (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))|
 %
-\just={ Absorção-+}
+\just={ Absorção-+ }
 %
     |inv2 x (either (const 0) succ) = ( either (const 1) ( ((1-x)*).p1 )).(id + (split (macL x) (inv2 x)))|
 %
@@ -881,7 +881,7 @@ testInv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000
 
 \subsection*{Problema 2}
 
-\par Para o problema 2 era requerido que fosse definida a função \emph{wc_c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instância, foram definidas as funções \emph{wc_c}, \emph{lookahead_sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
+\par Para o problema 2 era requerido que fosse definida a função \emph{wc c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instancia, foram definidas as funções \emph{wc c}, \emph{lookahead sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
 \par Antes de mais, são apresentadas a seguir as definições das funções acima mencionadas, mais a definição de \emph{sep}, que foram usadas para testes e para clarificar a linha de raciocínio do grupo antes da resolução do problema:
 
 \begin{code}
@@ -895,11 +895,13 @@ wc_w_pointfree = (either (const 0) h2).(id -|- id >< (split wc_w_pointfree lh_po
 {- Para poder ser usado no worker wrapper, temos que definir o sep localmente-}
 sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
+
 \end{code}
 
-\par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc_w} para \emph{wc} e da função \emph{lookahead_sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
+\par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc w} para \emph{wc} e da função \emph{lookahead sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
 
 \begin{eqnarray*}
+%
 \start
 %
   \begin{cases}
@@ -942,26 +944,26 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
     wc.cons = h2.(id >< (split wc lh))  \\
   \end{cases}
 %
-\just={ Pelo enunciado, wc.nil = 0, wc.cons = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2)) }
+\just={ Pelo enunciado, wc.nil = 0; wc.cons = cond (uncurry(&&).(split((not.sep.p1) (lh.p2) ))) ((wc.p2) + 1) (wc.p2) }
 %
   \begin{cases}
-    h1 = 0                                                                    \\    
-    h2.(id >< (split wc lh)) = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2))  \\
+    h1 = 0                                                                                           \\    
+    h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)  \\
   \end{cases}
 \end{eqnarray*}
 
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
 \begin{eqnarray*}
 \start
-  |h2.(id >< (split wc lh)) = cond ((not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2))|
+  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) + 1) (wc.p2)|
 %
 \just={ "Tradução" da condição anterior para uma linguagem mais adequada a Cálculo de Programas }
 %
-  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (lh.p2) )) (wc.p2 +1) (wc.p2)|
+  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (lh.p2) )) ((wc.p2) + 1) (wc.p2)|
 %
 \just={ Cancelamento-x; Definição de succ }
 %
-  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.split wc) lh).p2|
+  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.(split wc lh).p2)|
 %
 \just={ Fusão-x; Reflexão-x; Natural-p1; Natural-p2; Cancelamento-x }
 %
