@@ -176,6 +176,7 @@ disciplina, entre outras, deve-se ao facto de, neste mesmo sítio do texto
 fonte, se ter inserido o seguinte código \Haskell:
 
 \begin{code}
+{-# OPTIONS_GHC -XNPlusKPatterns #-}
 import Cp
 import List
 import Nat
@@ -1210,12 +1211,10 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 
 \begin{code}
 generateAlgae = undefined
-showAlgae = undefined
 
 showAlgae = cataA ginA ginB
-            where ginA = either (const 'A') (conc . (id >< id))
-                  ginB = either (show) (id)
--}
+            where ginA = either (const "A") (conc . (id >< id))
+                  ginB = either (const "B") (id)
 \end{code}
 
 \subsection*{Problema 5}
