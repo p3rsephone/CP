@@ -882,7 +882,7 @@ testInv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000
 
 \subsection*{Problema 2}
 
-\par Para o problema 2 era requerido que fosse definida a função \emph{wc_c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instância, foram definidas as funções \emph{wc_c}, \emph{lookahead_sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
+\par Para o problema 2 era requerido que fosse definida a função \emph{wc c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instância, foram definidas as funções \emph{wc c}, \emph{lookahead sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
 \par Antes de mais, são apresentadas a seguir as definições das funções acima mencionadas, mais a definição de \emph{sep}, que foram usadas para testes e para clarificar a linha de raciocínio do grupo antes da resolução do problema:
 
 \begin{code}
@@ -898,7 +898,7 @@ sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
 \end{code}
 
-\par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc_w} para \emph{wc} e da função \emph{lookahead_sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
+\par No que toca à resolução do problema, o grupo começou pela Lei de Fokkinga como é apresentado a seguir. É de salientar a alteração do nome da função \emph{wc w} para \emph{wc} e da função \emph{lookahead sep} para \emph{lh}, por forma a facilitar a leitura e compreensão do racíocínio e cálculos.
 
 \begin{eqnarray*}
 \start
@@ -955,11 +955,7 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
 \begin{eqnarray*}
 \start
-  |h2.(id >< (split wc lh)) = cond ((not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2))|
-%
-\just={ "Tradução" da condição anterior para uma linguagem mais adequada a Cálculo de Programas }
-%
-  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (lh.p2) )) (wc.p2 +1) (wc.p2)|
+  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)|
 %
 \just={ Cancelamento-x; Definição de succ }
 %
@@ -1173,18 +1169,43 @@ mirrorB_tree bt = Block {leftmost = Block {leftmost = Nil, block = [(21,Nil),(18
 
 %passar o q está a beira do diagrama no caderno
 
-
-
 %------------------------ATÉ AQUI------------------------ -}
 
 \begin{code}
-lsplitB_tree = undefined
 
-qSortB_tree = undefined
+lsplitB_tree []    = Left ()
+lsplitB_tree (h:t) = Right (s,[(h,l)]) where (s,l) = part1 (<h) t
 
-dotB_tree = undefined
+part1:: (a -> Bool) -> [a] -> ([a], [a])
+part1 p []                = ([],[])
+part1 p (h:t) | p h       = let (s,l) = part1 p t in (h:s,l)
+             | otherwise = let (s,l) = part1 p t in (s,h:l)
 
-cB_tree2Exp = undefined
+
+qSortB_tree :: Ord a => [a] -> [a]
+qSortB_tree = hyloB_tree inordB lsplitB_tree
+--------------------------------------------------------------------------------
+
+dotB_tree :: (Show a) => B_tree a -> IO ExitCode
+dotB_tree = dotpict . bmap nothing (Just . show) . cB_tree2Exp
+
+cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
+              where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 bt2 = Node (6,(Node (3,(Node (2,(Empty,Empty)),Empty)),Node (7,(Empty,Node (9,(Empty,Empty))))))
 
