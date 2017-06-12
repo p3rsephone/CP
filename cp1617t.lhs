@@ -723,7 +723,7 @@ outras funções auxiliares que sejam necessárias.
 \subsection*{Problema 1}
 %Falar ao professor disto:
 %inv x = for ( (1+) . ((1-x)*) ) 1
-%\begin{comment}
+
 
 \par A resolução deste problema consistiu essencialmente em três partes: a definição de \emph{inv x} como uma função em \emph{Haskell}, todo o raciocínio envolvente até chegar à solução final (com o auxílio da Lei \emph{Fokkinga}), e a conversão da solução para um ciclo-\emph{for}, tal como era pedido no enunciado.
 \par Assim, e como primeira tarefa, resultou a seguinte definição de \emph{inv x}:
@@ -755,15 +755,15 @@ inv2 x (n+1) =  (macL x (n+1)) + (inv2 x (n))
 \start
 %
   \begin{cases}
-    f.in = h.F(split f g)   \\
-    g.in = k.F(split f g)   \\
+    |f.in = h.F(split f g)|   \\
+    |g.in = k.F(split f g)|   \\
   \end{cases}
 %
-\just={ in=(either (const 0) succ); f=inv; g=macL; F(split f g)=F(split inv macL)=( id + (split inv macL)) }
+\just={ |in=(either (const 0) succ)|; f=inv; g=macL; |F(split f g)|=|F(split inv macL)|=|( id + (split inv macL))| }
 %
   \begin{cases}
-    inv.(either (const 0) succ) = h.( id + (split inv macL))   \\
-    macL.(either (const 0) succ) = k.( id + (split inv macL))  \\
+    |inv.(either (const 0) succ) = h.( id + (split inv macL))|   \\
+    |macL.(either (const 0) succ) = k.( id + (split inv macL))|  \\
   \end{cases}
 %
 \end{eqnarray*}
@@ -775,15 +775,15 @@ Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funç�
 \start
 %
   \begin{cases}
-    inv2 x (const 0) = 1                \\
-    inv2 x succ = add.(split macL x inv2 x)   \\
+    |inv2 x (const 0) = 1|                         \\
+    |inv2 x succ = add.(split (macL x) (inv2 x))|   \\
   \end{cases}
 %
 \just={ Universal-+ }
 %
     |inv2 x (either (const 0) succ) = either (const 1) (add.(split (macL x) (inv2 x)))|
 %
-\just={ Natural-id; Definição de macL x }
+\just={ |Natural-id|; Definição de macL x }
 %
     |inv2 x (either (const 0) succ) = either ((const 1).id) (add.(split ( ((1-x)*) macL x (n) ) (inv2 x)))|
 %
@@ -808,15 +808,15 @@ Do mesmo modo que se procedeu para h, segue-se a dedução de k:
 \start
 %
   \begin{cases}
-    macL x (const 0) = 1                \\
-    macL x succ = (1-x)*(macL x)        \\
+    |macL x (const 0) = 1|                \\
+    |macL x succ = (1-x)*(macL x)|        \\
   \end{cases}
 %
 \just={ Universal-+ }
 %
     |macL x (either (const 0) succ) = either (const 1) ( (1-x)*(macL x) )|
 %
-\just={ Natural-id; Cancelamento-x }
+\just={ |Natural-id|; Cancelamento-x }
 %
     |inv2 x (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))|
 %
@@ -837,8 +837,8 @@ Ora, pela Lei de \emph{Fokkinga}, podemos concluir que
 \start
 %
   \begin{cases}
-    inv.(either (const 0) succ) = h.( id + (split inv macL))   \\
-    macL.(either (const 0) succ) = k.( id + (split inv macL))  \\
+    |inv.(either (const 0) succ) = h.( id + (split inv macL))|   \\
+    |macL.(either (const 0) succ) = k.( id + (split inv macL))|  \\
   \end{cases}
 %
 \just={ Fokkinga }
@@ -874,14 +874,14 @@ Finalmente, obtemos a solução ao problema,
 inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 \end{code}
 
-Nota: Teste \emph{QuickCheck}:                              %------------------QUICKCHECK-------------------
+Nota: Teste \emph{QuickCheck}:
 \begin{code}
 prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 \end{code}
 
-%\end{comment}
-%----------------------------------------------------------------------------------------------------------------------------
 
+%----------------------------------------------------------------------------------------------------------------------------
+\pagebreak
 \subsection*{Problema 2}
 
 \par Para o problema 2 era requerido que fosse definida a função \emph{wc c} segundo o modelo \emph{|worker|/|wrapper|}, onde o \emph{wrapper} seria um catamorfismo de listas. Para isto, como primeira instância, foram definidas as funções \emph{wc c}, \emph{lookahead sep}  em \emph{Point Free} para ajudar à resolução, compreensão e testes do exercício, e, de seguida, foi aplicada a Lei da Recursividade Múltipla (ou Fokkinga) às mesmas funções.
@@ -895,7 +895,7 @@ wc_w_pointfree :: [Char] -> Int
 wc_w_pointfree = (either (const 0) h2).(id -|- id >< (split wc_w_pointfree lh_pointfree)).outList
                   where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
 
-{- Para poder ser usado no worker wrapper, temos que definir o sep localmente-}
+
 sep :: Char -> Bool
 sep c = ( c == ' ' || c == '\n' || c == '\t')
 \end{code}
@@ -906,29 +906,29 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
 \start
 %
   \begin{cases}
-    f.in = h.F(split f g)   \\
-    g.in = k.F(split f g)   \\
+    |f.in = h.F(split f g)|   \\
+    |g.in = k.F(split f g)|   \\
   \end{cases}
 %
-\just={ in=(either nil cons); f=wc; g=lh; F(split f g)=F(split wc lh)=( id + id >< (split wc lh)) }
+\just={ |in=(either nil cons)|; f=wc; g=lh; |F(split f g)|=|F(split wc lh)|=|( id + id >< (split wc lh))| }
 %
   \begin{cases}
-    wc.(either nil cons) = h.( id + id >< (split wc lh))   \\
-    lh.(either nil cons) = k.( id + id >< (split wc lh))   \\
+    |wc.(either nil cons) = h.( id + id >< (split wc lh))|   \\
+    |lh.(either nil cons) = k.( id + id >< (split wc lh))|   \\
   \end{cases}
 %
-\just={ Reflexão-+; h=(either h1 h2); k=(either k1 k2)}
+\just={ Def-+ (x2) }
 %
   \begin{cases}
-    wc.(either nil cons) = (either h1 h2).( id + id >< (split wc lh))   \\
-    lh.(either nil cons) = (either k1 k2).( id + id >< (split wc lh))   \\
+    |wc.(either nil cons) = h.(either (i1.id) ((i2.id)><(split wc lh)) )|   \\
+    |lh.(either nil cons) = k.(either (i1.id) ((i2.id)><(split wc lh)) )|   \\
   \end{cases}
 %
-\just={ Fusão-+; Absorção-+; Natural-id }
+\just={ Fusão-+; |Natural-id| }
 %
   \begin{cases}
-    either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))   \\
-    either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))   \\
+    |wc.(either nil cons) = (either (h.i1) ((h.i2)><(split wc lh)) )|   \\
+    |lh.(either nil cons) = (either (k.i1) ((k.i2)><(split wc lh)) )|   \\
   \end{cases}
 \end{eqnarray*}
 
@@ -936,23 +936,23 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 
 \begin{eqnarray*}
 \start
-  |either (wc.nil) (wc.cons) = either h1 (h2.(id >< (split wc lh)))|
+  |either (wc.nil) (wc.cons) = (either (h.i1) ((h.i2)><(split wc lh)) )|
 %
 \just={ Eq-+ }
 %
   \begin{cases}
-    wc.nil = h1                         \\
-    wc.cons = h2.(id >< (split wc lh))  \\
+    |wc.nil = h.i1|                           \\
+    |wc.cons = (h.i2).(id >< (split wc lh))|  \\
   \end{cases}
 %
-\just={ Pelo enunciado, wc.nil = 0, wc.cons = (cond (not.sep.p1 && lh.p2) (wc.p2 +1) (wc.p2)) }
+\just={ |wc.nil = 0|; |wc.cons = (cond (not.sep.p1 && lh.p2) ((wc.p2) +1) (wc.p2))|; |h=(either h1 h2)| }
 %
   \begin{cases}
-    h1 = 0                                                                                           \\
-    h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)  \\
-
+    |h1 = 0|                                                                                             \\
+    |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)| \\
   \end{cases}
 \end{eqnarray*}
+
 
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
 \begin{eqnarray*}
@@ -963,7 +963,7 @@ Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Le
 %
   |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.split wc) lh).p2|
 %
-\just={ Fusão-x; Reflexão-x; Natural-p1; Natural-p2; Cancelamento-x }
+\just={ Fusão-x; Reflexão-x; |Natural-p1|; |Natural-p2|; Cancelamento-x }
 %
   |h2.(id><(split wc lh)) = cond ((uncurry(&&)).((not sep)><(p2.(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
@@ -991,20 +991,20 @@ Depois de tudo isto, falta ainda provar a segunda condição:
 
 \begin{eqnarray*}
 \start
-  |either (lh.nil) (lh.cons) = either k1 (k2.(id >< (split wc lh)))|
+  |(either (lh.nil) (lh.cons) ) = (either (k.i1) ((k.i2)><(split wc lh)) )|
 %
-\just={ Eq-+ }
+\just={ Eq-+; COmo já provamos, k será |k=(either k1 k2)|}
 %
   \begin{cases}
-    lh.nil = k1                         \\
-    lh.cons = k2.(id >< (split wc lh))  \\
+    |lh.nil = k1|                         \\
+    |lh.cons = k2.(id >< (split wc lh))|  \\
   \end{cases}
 %
-\just={ Pelo enunciado, lh.nil = true, lh.cons = sep.p1 }
+\just={ Pelo enunciado, |lh.nil = true|, |lh.cons = sep.p1| }
 %
   \begin{cases}
-    k1 = true                          \\
-    k2.(id >< (split wc lh)) = sep.p1  \\
+    |k1 = true|                          \\
+    |k2.(id >< (split wc lh)) = sep.p1|  \\
   \end{cases}
 \end{eqnarray*}
 
@@ -1014,11 +1014,11 @@ Para descobrir k2 é necessária a Lei de Leibniz, usadas na seguinte prova:
 \start
   |k2.(id >< (split wc lh)) = sep.p1|
 %
-\just={ Natural-p1 }
+\just={ |Natural-p1| }
 %
   |k2.(id >< (split wc lh)) = sep.p1.(id >< (split wc lh))|
 %
-\just={ Natural-id; Lei de Leibniz }
+\just={ |Natural-id|; Lei de Leibniz }
 %
 |k2 = sep.p1|
 \end{eqnarray*}
@@ -1032,6 +1032,7 @@ Conclui-se assim que
 %
   |h = either ( const True ) ( sep.p1 )|
 \end{eqnarray*}
+
 
 Finalmente, segue-se a solução final deste problema e um exemplo (ou teste no terminal) de como o \emph{|worker|/|wrapper|} funcionaria.
 
@@ -1048,7 +1049,7 @@ worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k
 
 
 Exemplo: worker diana tania paulo -> (3,False) -> wrapper (3,False) -> 3
-Nota: Teste \emph{QuickCheck}:                                      %------------------QUICKCHECK-------------------
+Nota: Teste \emph{QuickCheck}:
 \begin{code}
 genSafeChar :: Gen Char
 genSafeChar = elements $['a'..'z'] ++ "/n/t "
@@ -1063,7 +1064,7 @@ prop_wc = forAll genSafeString $ \str -> (wc_w_final str) == (length $ words$str
 \end{code}
 
 %----------------------------------------------------------------------------------------------------------------------------
-
+\pagebreak
 \subsection*{Problema 3}
 
 \par O problema 3 envolvia, em primeiro lugar, a construção de uma biblioteca para o tipo de dados \emph{B-Tree}. Assim, com a ajuda da biblioteca da \emph{Btree} comum, e com algum tempo e empenho, foram conseguidas as seguintes definições de \emph{inB-Tree}, \emph{outB-Tree}, catamorfismo de \emph{B-Tree}, entre outros :
@@ -1099,7 +1100,7 @@ instance Functor B_tree
 \end{code}
 
 
-De seguida, era necessário definir a função \emph{inorder}, adequada para este tipo de dados, como um catamorfismo. Através do seguinte diagrama, foi conseguido um raciocínio claro que permitiu chegar à solução, também apresentada a seguir:
+\par De seguida, era necessário definir a função \emph{inorder}, adequada para este tipo de dados, como um catamorfismo. Através do seguinte diagrama, foi conseguido um raciocínio claro que permitiu chegar à solução, também apresentada a seguir:
 
 \begin{code}
 
@@ -1110,6 +1111,8 @@ inordB = either nil join
 
 \end{code}
 
+\hfill \break
+\hfill \break
 
 \xymatrix@@C=3cm{
     |B-Tree A|
@@ -1125,7 +1128,10 @@ inordB = either nil join
            \ar[l]^-{|inord|}
 }
 
-Era também pedida a definição da função \emph{largest Block} como um catamorfismo. Mais uma vez, através do auxílio de um diagrama, o problema foi resolvido, e ambos apresentam-se em baixo:
+\hfill \break
+\hfill \break
+
+\par Era também pedida a definição da função \emph{largest Block} como um catamorfismo. Mais uma vez, através do auxílio de um diagrama, o problema foi resolvido, e ambos apresentam-se em baixo:
 
 
 \begin{code}
@@ -1135,6 +1141,8 @@ largestBlock = cataB_tree largestB
 
 \end{code}
 
+\hfill \break
+\hfill \break
 
 \xymatrix@@C=3cm{
     |B-Tree A|
@@ -1150,7 +1158,10 @@ largestBlock = cataB_tree largestB
            \ar[l]^-{|largestB|}
 }
 
-Desta vez, era requerida a definição da função \emph{mirror} como um anamorfismo. O anamorfismo foi conseguido através de várias funções auxiliares, resultando num código mais legível e de mais fácil compreensão. De seguida encontra-se a solução proposta, tal como um esquema que representa o raciocínio que o grupo teve.
+\hfill \break
+\hfill \break
+
+\par Desta vez, era requerida a definição da função \emph{mirror} como um anamorfismo. O anamorfismo foi conseguido através de várias funções auxiliares, resultando num código mais legível e de mais fácil compreensão. De seguida encontra-se a solução proposta, tal como um esquema que representa o raciocínio que o grupo teve.
 
 \begin{code}
 mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
@@ -1158,23 +1169,37 @@ mirrorB_tree = anaB_tree ((id -|- (fim.rever.insere.mir)).outB_tree)
                       insere = split (p1.p2) (cons . (split (p1) (p2.p2)))
                       rever = split (reverse . p1) (reverse . p2)
                       fim = split (head . p2) ((uncurry zip). (split (p1) (tail . p2)))
-
-{-
-mir :: (B_tree a, [(a, B_tree a)]) -> ( B_tree a, ([a],[B_tree a]) )
-insere ::  ( B_tree a, ([a],[B_tree a]) ) -> ([a], [B_tree a])
-rever :: ([a], [B_tree a]) -> ([a], [B_tree a])
-fim :: ([a], [B_tree a]) -> (B_tree a, [(a, B_tree a)])
-
-mirrorB_tree bt = Block {leftmost = Block {leftmost = Nil, block = [(21,Nil),(18,Nil)]}, block = [(16,Block {leftmost = Nil, block = [(12,Nil),(9,Nil)]}),(7,Block {leftmost = Nil, block = [(6,Nil),(5,Nil),(2,Nil),(1,Nil)]})]
--}
 \end{code}
 
-%passar o q está a beira do diagrama no caderno
 
-%------------------------ATÉ AQUI------------------------
+O raciocínio seguinte inclui a explicação passo a passo, usando as funções acima, que o grupo seguiu, a partir dos tipos de dados necessários para a resolução do exercício.
+\begin{eqnarray*}
+\start
+  |1 + (B_tree a >< (a >< B_tree a)*)|
+%
+\just={ mir }
+%
+  |1 + (B_tree a >< (a* >< B_tree a*))|
+%
+\just={ insere }
+%
+  |1 + (a* >< B_tree a*)|
+%
+\just={ rever }
+%
+  |1 + (B_tree a >< (a* >< B_tree a*))|
+%
+\just={ fim }
+%
+  |1 + (B_tree a >< (a >< B_tree a)*)|
+\end{eqnarray*}
+
+
+
+\par Quase no fim, seria necessário definir a função \emph{quick sort} como um hilomorfismo. Isto foi conseguido através do desenho de um diagrama, e com as bibliotecas fornecidas pelos docentes. De seguida, encontra-se a solução a este problema, juntamente com o diagrama do hilomorfismo.
+
 
 \begin{code}
-
 lsplitB_tree []    = Left ()
 lsplitB_tree (h:t) = Right (s,[(h,l)]) where (s,l) = part1 (<h) t
 
@@ -1186,27 +1211,90 @@ part1 p (h:t) | p h       = let (s,l) = part1 p t in (h:s,l)
 
 qSortB_tree :: Ord a => [a] -> [a]
 qSortB_tree = hyloB_tree inordB lsplitB_tree
---------------------------------------------------------------------------------
+\end{code}
 
+\hfill \break
+\hfill \break
+
+Diagrama:
+ \xymatrix@@C=3cm{
+    |A*|
+           \ar[d]_-{|ana lsplitB|}
+            \ar[r]^-{|lsplitB|}
+&
+    |1 + A* \times (A \times A*)*|
+           \ar[d]^{|id +((ana lsplitB) \times map(id \times ana lsplitB))|}
+\\
+     |B|
+        \ar[d]_-{|cata inordB|}
+        \ar[r]^-{|outB|}
+&
+     |1 + B \times (A \times B)*|
+           \ar[l]^-{|inB|}
+            \ar[d]^{|id +((cata inordB) \times map(id \times cata inordB))|}
+\\
+    |A*|
+&
+    |1 + A* \times (A \times A*)*|
+        \ar[l]_-{|lsplitB|}
+}
+
+\hfill \break
+\hfill \break
+
+\par Finalmente, era requerido que fosse definida a função \emph{dotB-tree}, que permitia mostrar em Graphviz árvores \emph{B-tree}. Segue-se a solução definitiva e uma imagem de exemplo com o respetivo código.
+
+
+\begin{code}
 dotB_tree :: (Show a) => B_tree a -> IO ExitCode
 dotB_tree = dotpict . bmap nothing (Just .init.concat.(map (++"|")).(map show)) . cB_tree2Exp
 
-func x = [x]
 
 cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
               where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
+\end{code}
 
 
+Código e imagem:
+\begin{center}
+       \includegraphics[width=0.9\textwidth]{cp1617t_media/nossa.png}
+\end{center}
 
-bt2 = Node (6,(Node (3,(Node (2,(Empty,Empty)),Empty)),Node (7,(Empty,Node (9,(Empty,Empty))))))
-
-
+\begin{code}
 bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Nil), (9, Nil)]}, block = [(15,Block {leftmost = Nil,block = [(10, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
-
 \end{code}
 
 %----------------------------------------------------------------------------------------------------------------------
+\pagebreak
 \subsection*{Problema 4}
+
+\par Neste problema foram introduzidos conceitos de tipos de dados mutuamente recursivos, mais concretamente, os \emph{L-Systems}. Era já fornecido o tipos de dados \emph{Algae}, e os \emph{in's} e \emph{out's} respetivos, juntamente com os funtores e catamorfismos. Deste modo, era apenas necesário responder aos subproblemas propostos.
+
+\par Como primeira instância, era necessária uma definição dos anamorfismos dos tipos A e B. Com o auxílio da definição de anamorfismo comum, presente nas bibliotecas da Unidade Curricular, foi apenas preciso adaptar a este caso concreto. Todo o raciocínio até à solução do primeiro problema é apresentado em baixo:
+
+\begin{eqnarray*}
+\start
+  |ana g = in.(rec(ana g)).g|
+%
+\just={ Do tipo geral anterior, foi adaptado para o nosso. }
+%
+  \begin{cases}
+    |anaA g = inA.(rec(ana g)).g|    \\
+    |anaA g = inA.(rec(ana g)).g|    \\
+  \end{cases}
+\end{eqnarray*}
+
+Através dos catas já definidos (cataA e cataB), determinamos que o \emph{rec} aplicado aos catas é, respetivamente:
+
+\begin{eqnarray*}
+\start
+  \begin{cases}
+    |id + cataA >< cataB|    \\
+    |id + cataA|             \\
+  \end{cases}
+\end{eqnarray*}
+
+Também foi verificado que os anamorfismos teriam dois genes, espelhando os catamorfismos. Assim, e aplicando \emph{rec} aos anamorfismos, temos que:
 
 \begin{code}
 anaA ga gb = inA . (id -|- anaA ga gb >< anaB ga gb) . ga
@@ -1214,23 +1302,93 @@ anaA ga gb = inA . (id -|- anaA ga gb >< anaB ga gb) . ga
 anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \end{code}
 
+
+\par Como segunda instância foram requeridas duas definições: a definição da função \emph{generateAlgae} como um anamorfismo de \emph{Algae}, e a da função \emph{showAlgae} com um catamorfismo de \emph{Algae}. Ambas as funções foram conseguidas através do desenho de diagramas, que se apresentam a seguir, tal como as respetivas soluções.
+
+
+%-----------------------------------------------------------------------------AQUI
+\hfill \break
+\hfill \break
+
+Diagramas da função \emph{generateAlgae}:
+
+
+
+
+
+
+
+
+\hfill \break
+\hfill \break
+
+Função g\emph{generateAlgae}:
 \begin{code}
 generateAlgae = anaA genA genB
                 where genA = (id -|- dup) . outNat
                       genB = outNat
+\end{code}
 
+%-----------------------------------------------------------------------------AQUI
 
+\hfill \break
+\hfill \break
+
+Diagramas da função \emph{showAlgae}:
+
+\xymatrix@@C=3cm{
+    |Algae A|
+           \ar[d]_-{|cata showA|}
+&
+    |1 + A \times B|
+           \ar[d]^{|id + Show A \times Show B|}
+           \ar[l]_-{|inA|}
+\\
+     |String|
+&
+     |1 + String \times String|
+           \ar[l]^-{|[const "A", conc]|}
+}
+
+\hfill \break
+\hfill \break
+
+\xymatrix@@C=3cm{
+    |Algae B|
+           \ar[d]_-{|cata showB|}
+&
+    |1 + A|
+           \ar[d]^{|id + Show A|}
+           \ar[l]_-{|inB|}
+\\
+     |String|
+&
+     |1 + String|
+           \ar[l]^-{|[const "B", id]|}
+}
+
+\hfill \break
+\hfill \break
+
+Função \emph{showAlgae}:
+\begin{code}
 showAlgae = cataA ginA ginB
             where ginA = either (const "A") (conc)
                   ginB = either (const "B") (id)
-
---------------QuickCheck ----------------
-
-prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegral.fib.succ.toInteger) x
-
 \end{code}
 
+
+Nota: Testes do \emph{QuickCheck}
+\begin{code}
+prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegral .fib.succ. toInteger) x
+\end{code}
+
+%------------------------------------------------------------------------------------------------------------------
+\pagebreak
 \subsection*{Problema 5}
+
+O problema 5 tem como base probabilidades, e, consequentemente, o uso de mónades. Como primeira instância, era necessário definir a função \emph{permuta} para construir a árvore de jogos a partir de uma permutação aleatória das equipas. A segunda parte do exercício envolvia a definição de outra função, \emph{eliminatoria}, que dá como resultado a distribuição de equipas vencedoras do campeonato.
+
 
 \begin{code}
 permuta [] = return []
@@ -1239,6 +1397,21 @@ permuta x = do {(a,b) <- getR x; c <-permuta b ;return (a:c)}
 eliminatoria (Leaf z) =  return z
 eliminatoria(Fork (a,b)) = do {sortA <- eliminatoria a; sortB <- eliminatoria b; jogo(sortA,sortB)}
 \end{code}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %----------------- Fim do anexo cpm soluções propostas ------------------------%
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
