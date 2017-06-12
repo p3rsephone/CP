@@ -1120,12 +1120,12 @@ inordB = either nil join
            \ar[d]_-{|cata inord|}
 &
     |1 + (B-Tree A \times (A \times B-treeA)*)|
-           \ar[d]^{|id +((cata inord) \times (id \times cata inord))|}
+           \ar[d]^{|id +((cata inord) \times map(id \times cata inord))|}
            \ar[l]_-{|inB-tree|}
 \\
      |A*|
 &
-     |1 + A*|
+     |1 + A* \times (A \times A* )*|
            \ar[l]^-{|inord|}
 }
 
@@ -1144,16 +1144,15 @@ largestBlock = cataB_tree largestB
     |B-Tree A|
            \ar[d]_-{|cata largestB|}
 &
-    |1 + B-Tree A|
-           \ar[d]^{|id + cata largestB|}
+    |1 + (B-Tree A \times (A \times B-treeA)*)|
+           \ar[d]^{|id +((cata largestB) \times map(id \times cata largestB))|}
            \ar[l]_-{|inB-tree|}
 \\
      |Int|
 &
-     |1 + Int|
+     |1 + Int \times (A \times Int)*|
            \ar[l]^-{|largestB|}
 }
-
 
 Desta vez, era requerida a definição da função \emph{mirror} como um anamorfismo. O anamorfismo foi conseguido através de várias funções auxiliares, resultando num código mais legível e de mais fácil compreensão. De seguida encontra-se a solução proposta, tal como um esquema que representa o raciocínio que o grupo teve.
 
