@@ -183,8 +183,15 @@ O facto de o interpretador carregar as bibliotecas do \MaterialPedagogico\ da
 disciplina, entre outras, deve-se ao facto de, neste mesmo sítio do texto
 fonte, se ter inserido o seguinte código \Haskell:
 
+
+
+\def\hiddencode{
 \begin{code}
 {-# OPTIONS_GHC -XNPlusKPatterns #-}
+\end{code}
+}
+
+\begin{code}
 import Cp
 import List
 import Nat
@@ -883,7 +890,7 @@ inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 \end{code}
 
 \hfill \break
-\par Nota: Teste \emph{QuickCheck}.
+\par \underline{Nota}: Teste \emph{QuickCheck}.
 \par Neste teste foi necessário restringir o \emph{x} entre 1 e 2, como pedido no enunciado. Para além disso, como \emph{inv x} dá uma aproximação de 1/x, era preciso ter em conta um erro pequeno de cálculo, daí o grupo ter utilizado o número 0.000000000000009. Por fim, foi decidido que seria melhor testar com 50000 iterações.
 \begin{code}
 prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
@@ -1059,13 +1066,13 @@ worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k
 
 \end{code}
 
-
+\hfill \break
 Exemplo: \emph{worker diana tania paulo } - (3,False) - \emph{wrapper (3,False)} - 3
 
 
 \hfill \break
 
-\par Nota: Teste \emph{QuickCheck}.
+\par \underline{Nota}: Teste \emph{QuickCheck}.
 
 \par Para este teste, foi necessário gerar uma \emph{String} aleatória composta por caracteres de 'A' a 'Z', incluindo espaços, \tabs{tabs} e novas linhas. Deste modo, foram criadas as funções 'genSafeChar' e 'genSafeString' que, em conjunto com o \emph{wrapper} para a String 'SafeString', geram as Strings necessárias ao teste da solução proposta.
 
@@ -1400,7 +1407,7 @@ Diagramas da função \emph{generateAlgae}:
 \hfill \break
 
 
-Explicação do tipo Nat ------ 1 + Nat x Nat
+Explicação do raciocínio para chegar a \emph{genA}:
 
 \xymatrix@@C=5cm{
     |Nat|
@@ -1495,7 +1502,7 @@ showAlgae = cataA ginA ginB
 \end{code}
 
 \hfill \break
-\par Nota: Teste \emph{QuickCheck}.
+\par \underline{Nota}: Teste \emph{QuickCheck}.
 \par Neste teste foi necessário usar as funções 'fromIntegral' e 'toInteger' para garantir a compatibilidade de tipos durante o teste. Também se chegou à conclusão de que seria melhor restringir o \emph{x} entre 1 e 25 já que com valores mais elevados, os testes não seriam efetuados em tempo útil, ou seja, poderiam demorar dias a ser completados. 
 \begin{code}
 prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == 
