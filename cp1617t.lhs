@@ -8,6 +8,7 @@
 \usepackage[all]{xy}
 %================= lhs2tex=====================================================%
 %include polycode.fmt
+%format above = "\textsuperscript{*}"
 %format (cata g)= "\cata{" g "}"
 %format (ana g)= "\ana{" g "}"
 %format (cataNat g)= "\cata{" g "}"
@@ -61,8 +62,9 @@
 %format IO = "\fun{IO}"
 %format BTree = "\fun{BTree} "
 %format LTree = "\mathsf{LTree}"
+%format succ = "\mathsf{succ}"
 %format (lcbr (x)(y)) = "\begin{lcbr}" x "\\" y "\end{lcbr}"
-\newenvironment{lcbr}{\left\{\begin{array}{l}}{\end{array}\right.}
+%format (longcond (c)(t)(e)) = "\begin{array}{ll}\multicolumn{2}{l}{" c -> "}\\& " t ",\\& " e "\end{array}"
 
 %-------------- interface with pdbc.lhs ------------------------------------
 \def\monadification{4.10}
@@ -762,7 +764,7 @@ inv2 x (n+1) =  (macL x (n+1)) + (inv2 x (n))
     |g.in = k.F(split f g)|   \\
   \end{cases}
 %
-\just={ |in=(either (const 0) succ)|; f=inv; g=macL; |F(split f g)|=|F(split inv macL)|=|( id + (split inv macL))| }
+ \just{|<=>|}{ |in=(either (const 0) succ)|; f=inv; g=macL; |F(split f g)|=|F(split inv macL)|=|( id + (split inv macL))| }
 %
   \begin{cases}
     |inv.(either (const 0) succ) = h.( id + (split inv macL))|   \\
@@ -782,19 +784,19 @@ Para completar a lei de \emph{Fokkinga}, é necessário deduzir h e k das funç�
     |inv2 x . succ = add.(split (macL x) (inv2 x))|   \\
   \end{cases}
 %
-\just={ |Universal-+| }
+ \just{|<=>|}{ |Universal-+| }
 %
     |inv2 x . (either (const 0) succ) = either (const 1) (add.(split (macL x) (inv2 x)))|
 %
-\just={ |Natural-id|; Definição de macL x }
+ \just{|<=>|}{ |Natural-id|; Definição de macL x }
 %
     |inv2 x . (either (const 0) succ) = either ((const 1).id) (add.(split ( ((1-x)*) macL x ) (inv2 x)))|
 %
-\just={ |Absorção-x| }
+ \just{|<=>|}{ |Absorção-x| }
 %
     |inv2 x . (either (const 0) succ) = either ((const 1).id) (add.(((1-x)*) >< id).(split (macL x) (inv2 x) ))|
 %
-\just={ |Absorção-+| }
+ \just{|<=>|}{ |Absorção-+| }
 %
     |inv2 x . (either (const 0) succ) = ( either (const 1) ( add.( ((1-x)*) >< id)) ).(id + (split (macL x) (inv2 x)))|
 %
@@ -815,15 +817,15 @@ Do mesmo modo que se procedeu para h, segue-se a dedução de k:
     |macL x . succ = (1-x)*(macL x)|        \\
   \end{cases}
 %
-\just={ |Universal-+| }
+ \just{|<=>|}{ |Universal-+| }
 %
     |macL x . (either (const 0) succ) = either (const 1) ( (1-x)*(macL x) )|
 %
-\just={ |Natural-id|; |Cancelamento-x| }
+ \just{|<=>|}{ |Natural-id|; |Cancelamento-x| }
 %
     |macL x . (either (const 0) succ) = either ((const 1).id) ( ((1-x)*).p1.(split (macL x) (inv2 x) ))|
 %
-\just={ |Absorção-+| }
+ \just{|<=>|}{ |Absorção-+| }
 %
     |macL x . (either (const 0) succ) = ( either (const 1) ( ((1-x)*).p1 )).(id + (split (macL x) (inv2 x)))|
 %
@@ -844,7 +846,7 @@ Ora, pela Lei de \emph{Fokkinga}, podemos concluir que
     |macL.(either (const 0) succ) = k.( id + (split inv macL))|  \\
   \end{cases}
 %
-\just={ Fokkinga }
+ \just{|<=>|}{ Fokkinga }
 %
    |split (inv) (macL) = cata( split h k )|
 \end{eqnarray*}
@@ -913,21 +915,21 @@ sep c = ( c == ' ' || c == '\n' || c == '\t')
     |g.in = k.F(split f g)|   \\
   \end{cases}
 %
-\just={ |in=(either nil cons)|; f=wc; g=lh; |F(split f g)|=|F(split wc lh)|=|( id + id >< (split wc lh))| }
+ \just{|<=>|}{ |in=(either nil cons)|; f=wc; g=lh; |F(split f g)|=|F(split wc lh)|=|( id + id >< (split wc lh))| }
 %
   \begin{cases}
     |wc.(either nil cons) = h.( id + id >< (split wc lh))|   \\
     |lh.(either nil cons) = k.( id + id >< (split wc lh))|   \\
   \end{cases}
 %
-\just={ Def-+ (x2) }
+ \just{|<=>|}{ Def-+ (x2) }
 %
   \begin{cases}
     |wc.(either nil cons) = h.(either (i1.id) ((i2.id)><(split wc lh)) )|   \\
     |lh.(either nil cons) = k.(either (i1.id) ((i2.id)><(split wc lh)) )|   \\
   \end{cases}
 %
-\just={ Fusão-+; |Natural-id| }
+ \just{|<=>|}{ Fusão-+; |Natural-id| }
 %
   \begin{cases}
     |wc.(either nil cons) = (either (h.i1) ((h.i2)><(split wc lh)) )|   \\
@@ -941,14 +943,14 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 \start
   |either (wc.nil) (wc.cons) = (either (h.i1) ((h.i2)><(split wc lh)) )|
 %
-\just={ Eq-+ }
+ \just{|<=>|}{ Eq-+ }
 %
   \begin{cases}
     |wc.nil = h.i1|                           \\
     |wc.cons = (h.i2).(id >< (split wc lh))|  \\
   \end{cases}
 %
-\just={ |wc.nil = 0|; |wc.cons = (cond (not.sep.p1 && lh.p2) ((wc.p2) +1) (wc.p2))|; |h=(either h1 h2)| }
+ \just{|<=>|}{ |wc.nil = 0|; |wc.cons = (cond (not.sep.p1 && lh.p2) ((wc.p2) +1) (wc.p2))|; |h=(either h1 h2)| }
 %
   \begin{cases}
     |h1 = 0|                                                                                             \\
@@ -962,19 +964,19 @@ Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Le
 \start
   |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)|
 %
-\just={ |Cancelamento-x|; Definição de succ }
+ \just{|<=>|}{ |Cancelamento-x|; Definição de succ }
 %
   |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.split wc) lh).p2|
 %
-\just={ |Fusão-x|; |Reflexão-x|; |Natural-p1|; |Natural-p2|; |Cancelamento-x| }
+ \just{|<=>|}{ |Fusão-x|; |Reflexão-x|; |Natural-p1|; |Natural-p2|; |Cancelamento-x| }
 %
   |h2.(id><(split wc lh)) = cond ((uncurry(&&)).((not sep)><(p2.(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
-\just={ |Functor-x| }
+ \just{|<=>|}{ |Functor-x| }
 %
   |h2.(id><(split wc lh)) = cond ((uncurry(&&)).(((not sep.p1)><p2).(id><(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
-\just={ 2ªLei de fusão do condicional; Lei de Leibniz }
+ \just{|<=>|}{ 2ªLei de fusão do condicional; Lei de Leibniz }
 %
   |h2 = cond ((uncurry(&&)).((not.sep) >< p2)) (succ.p1.p2) (p1.p2)|
 \end{eqnarray*}
@@ -984,7 +986,7 @@ Conclui-se assim que
 \start
   |h = either h1 h2|
 %
-\just={ Definição de h1 e h2 }
+ \just{|<=>|}{ Definição de h1 e h2 }
 %
   |h = either ( const 0 ) (cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2))|
 \end{eqnarray*}
@@ -996,14 +998,14 @@ Depois de tudo isto, falta ainda provar a segunda condição:
 \start
   |(either (lh.nil) (lh.cons) ) = (either (k.i1) ((k.i2)><(split wc lh)) )|
 %
-\just={ Eq-+; COmo já provamos, k será |k=(either k1 k2)|}
+ \just{|<=>|}{ Eq-+; COmo já provamos, k será |k=(either k1 k2)|}
 %
   \begin{cases}
     |lh.nil = k1|                         \\
     |lh.cons = k2.(id >< (split wc lh))|  \\
   \end{cases}
 %
-\just={ Pelo enunciado, |lh.nil = true|, |lh.cons = sep.p1| }
+ \just{|<=>|}{ Pelo enunciado, |lh.nil = true|, |lh.cons = sep.p1| }
 %
   \begin{cases}
     |k1 = true|                          \\
@@ -1017,11 +1019,11 @@ Para descobrir k2 é necessária a Lei de Leibniz, usada na seguinte prova:
 \start
   |k2.(id >< (split wc lh)) = sep.p1|
 %
-\just={ |Natural-p1| }
+ \just{|<=>|}{ |Natural-p1| }
 %
   |k2.(id >< (split wc lh)) = sep.p1.(id >< (split wc lh))|
 %
-\just={ |Natural-id|; Lei de Leibniz }
+ \just{|<=>|}{ |Natural-id|; Lei de Leibniz }
 %
 |k2 = sep.p1|
 \end{eqnarray*}
@@ -1031,7 +1033,7 @@ Conclui-se assim que
 \start
   |k = either k1 k2|
 %
-\just={ Definição de k1 e k2 }
+ \just{|<=>|}{ Definição de k1 e k2 }
 %
   |k = either ( const True ) ( sep.p1 )|
 \end{eqnarray*}
@@ -1124,13 +1126,13 @@ inordB = either nil join
     |B-Tree A|
            \ar[d]_-{|cata inord|}
 &
-    |1 + (B-Tree A >< (A >< B-treeA)*)|
+    |1 + (B-Tree A >< (A >< B-treeA) above)|
            \ar[d]^{|id +((cata inord) >< map(id >< cata inord))|}
            \ar[l]_-{|inB-tree|}
 \\
-     |A*|
+     |A above|
 &
-     |1 + A* >< (A >< A* )*|
+     |1 + A above >< (A >< A above ) above|
            \ar[l]^-{|inord|}
 }
 
@@ -1154,13 +1156,13 @@ largestBlock = cataB_tree largestB
     |B-Tree A|
            \ar[d]_-{|cata largestB|}
 &
-    |1 + (B-Tree A >< (A >< B-treeA)*)|
+    |1 + (B-Tree A >< (A >< B-treeA) above)|
            \ar[d]^{|id +((cata largestB) >< map(id >< cata largestB))|}
            \ar[l]_-{|inB-tree|}
 \\
      |Int|
 &
-     |1 + Int >< (A >< Int)*|
+     |1 + Int >< (A >< Int) above|
            \ar[l]^-{|largestB|}
 }
 
@@ -1230,20 +1232,20 @@ Diagrama:
            \ar[d]_-{|ana lsplitB|}
             \ar[r]^-{|lsplitB|}
 &
-    |1 + A* >< (A >< A*)*|
+    |1 + A* >< (A >< A above) above|
            \ar[d]^{|id +((ana lsplitB) >< map(id >< ana lsplitB))|}
 \\
      |B|
         \ar[d]_-{|cata inordB|}
         \ar[r]^-{|outB|}
 &
-     |1 + B >< (A >< B)*|
+     |1 + B >< (A >< B) above|
            \ar[l]^-{|inB|}
             \ar[d]^{|id +((cata inordB) >< map(id >< cata inordB))|}
 \\
-    |A*|
+    |A above|
 &
-    |1 + A* >< (A >< A*)*|
+    |1 + A above >< (A >< A above) above|
         \ar[l]_-{|lsplitB|}
 }
 
@@ -1288,7 +1290,7 @@ bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Ni
 \start
   |ana g = in.(rec(ana g)).g|
 %
-\just={ Adaptação do tipo geral anterior para o nosso }
+ \just{|<=>|}{ Adaptação do tipo geral anterior para o nosso }
 %
   \begin{cases}
     |anaA g = inA.(rec(ana g)).g|    \\
