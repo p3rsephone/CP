@@ -37,7 +37,7 @@
 %format (const f) = "\underline{" f "}"
 %format TLTree = "\mathsf{TLTree}"
 % -- desactivados:
-%%format cond p f g = "\mcond{" p "}{" f "}{" g "}"
+%format cond p f g = "\mcond{" p "}{" f "}{" g "}"
 %format (split (x) (y)) = "\conj{" x "}{" y "}"
 %format for f i = "\mathsf{for}\ " f "\ " i
 %format B_tree = "\mathsf{B}\mbox{-}\mathsf{tree} "
@@ -962,15 +962,15 @@ Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Le
 \start
   |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)|
 %
-\just={ Cancelamento-x; Definição de succ }
+\just={ |Cancelamento-x|; Definição de succ }
 %
   |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.split wc) lh).p2|
 %
-\just={ Fusão-x; Reflexão-x; |Natural-p1|; |Natural-p2|; Cancelamento-x }
+\just={ |Fusão-x|; |Reflexão-x|; |Natural-p1|; |Natural-p2|; |Cancelamento-x| }
 %
   |h2.(id><(split wc lh)) = cond ((uncurry(&&)).((not sep)><(p2.(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
-\just={ Functor-x }
+\just={ |Functor-x| }
 %
   |h2.(id><(split wc lh)) = cond ((uncurry(&&)).(((not sep.p1)><p2).(id><(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
@@ -1011,7 +1011,7 @@ Depois de tudo isto, falta ainda provar a segunda condição:
   \end{cases}
 \end{eqnarray*}
 
-Para descobrir k2 é necessária a Lei de Leibniz, usadas na seguinte prova:
+Para descobrir k2 é necessária a Lei de Leibniz, usada na seguinte prova:
 
 \begin{eqnarray*}
 \start
@@ -1033,10 +1033,10 @@ Conclui-se assim que
 %
 \just={ Definição de k1 e k2 }
 %
-  |h = either ( const True ) ( sep.p1 )|
+  |k = either ( const True ) ( sep.p1 )|
 \end{eqnarray*}
 
-
+\pagebreak
 Finalmente, segue-se a solução final deste problema e um exemplo (ou teste no terminal) de como o \emph{|worker|/|wrapper|} funcionaria.
 
 \begin{code}
@@ -1051,7 +1051,10 @@ worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k
 \end{code}
 
 
-Exemplo: worker diana tania paulo -> (3,False) -> wrapper (3,False) -> 3
+Exemplo: \emph{worker diana tania paulo } - (3,False) - \emph{wrapper (3,False)} - 3
+
+\hfill \break
+
 Nota: Teste \emph{QuickCheck}:
 \begin{code}
 genSafeChar :: Gen Char
@@ -1121,13 +1124,13 @@ inordB = either nil join
     |B-Tree A|
            \ar[d]_-{|cata inord|}
 &
-    |1 + (B-Tree A \times (A \times B-treeA)*)|
-           \ar[d]^{|id +((cata inord) \times map(id \times cata inord))|}
+    |1 + (B-Tree A >< (A >< B-treeA)*)|
+           \ar[d]^{|id +((cata inord) >< map(id >< cata inord))|}
            \ar[l]_-{|inB-tree|}
 \\
      |A*|
 &
-     |1 + A* \times (A \times A* )*|
+     |1 + A* >< (A >< A* )*|
            \ar[l]^-{|inord|}
 }
 
@@ -1151,19 +1154,21 @@ largestBlock = cataB_tree largestB
     |B-Tree A|
            \ar[d]_-{|cata largestB|}
 &
-    |1 + (B-Tree A \times (A \times B-treeA)*)|
-           \ar[d]^{|id +((cata largestB) \times map(id \times cata largestB))|}
+    |1 + (B-Tree A >< (A >< B-treeA)*)|
+           \ar[d]^{|id +((cata largestB) >< map(id >< cata largestB))|}
            \ar[l]_-{|inB-tree|}
 \\
      |Int|
 &
-     |1 + Int \times (A \times Int)*|
+     |1 + Int >< (A >< Int)*|
            \ar[l]^-{|largestB|}
 }
 
 \hfill \break
 \hfill \break
 
+
+\pagebreak
 \par Desta vez, era requerida a definição da função \emph{mirror} como um anamorfismo. O anamorfismo foi conseguido através de várias funções auxiliares, resultando num código mais legível e de mais fácil compreensão. De seguida encontra-se a solução proposta, tal como um esquema que representa o raciocínio que o grupo teve.
 
 \begin{code}
@@ -1225,26 +1230,27 @@ Diagrama:
            \ar[d]_-{|ana lsplitB|}
             \ar[r]^-{|lsplitB|}
 &
-    |1 + A* \times (A \times A*)*|
-           \ar[d]^{|id +((ana lsplitB) \times map(id \times ana lsplitB))|}
+    |1 + A* >< (A >< A*)*|
+           \ar[d]^{|id +((ana lsplitB) >< map(id >< ana lsplitB))|}
 \\
      |B|
         \ar[d]_-{|cata inordB|}
         \ar[r]^-{|outB|}
 &
-     |1 + B \times (A \times B)*|
+     |1 + B >< (A >< B)*|
            \ar[l]^-{|inB|}
-            \ar[d]^{|id +((cata inordB) \times map(id \times cata inordB))|}
+            \ar[d]^{|id +((cata inordB) >< map(id >< cata inordB))|}
 \\
     |A*|
 &
-    |1 + A* \times (A \times A*)*|
+    |1 + A* >< (A >< A*)*|
         \ar[l]_-{|lsplitB|}
 }
 
 \hfill \break
 \hfill \break
 
+\pagebreak
 \par Finalmente, era requerido que fosse definida a função \emph{dotB-tree}, que permitia mostrar em Graphviz árvores \emph{B-tree}. Segue-se a solução definitiva e uma imagem de exemplo com o respetivo código.
 
 
@@ -1257,6 +1263,9 @@ cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
               where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
 \end{code}
 
+
+\hfill \break
+\hfill \break
 
 Código e imagem:
 \begin{center}
@@ -1279,7 +1288,7 @@ bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Ni
 \start
   |ana g = in.(rec(ana g)).g|
 %
-\just={ Do tipo geral anterior, foi adaptado para o nosso. }
+\just={ Adaptação do tipo geral anterior para o nosso }
 %
   \begin{cases}
     |anaA g = inA.(rec(ana g)).g|    \\
@@ -1306,6 +1315,8 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \end{code}
 
 
+\hfill \break
+
 \par Como segunda instância foram requeridas duas definições: a definição da função \emph{generateAlgae} como um anamorfismo de \emph{Algae}, e a da função \emph{showAlgae} com um catamorfismo de \emph{Algae}. Ambas as funções foram conseguidas através do desenho de diagramas, que se apresentam a seguir, tal como as respetivas soluções.
 
 
@@ -1325,7 +1336,7 @@ Diagramas da função \emph{generateAlgae}:
 \hfill \break
 \hfill \break
 
-Função g\emph{generateAlgae}:
+Função \emph{generateAlgae}:
 \begin{code}
 generateAlgae = anaA genA genB
                 where genA = (id -|- dup) . outNat
@@ -1343,13 +1354,13 @@ Diagramas da função \emph{showAlgae}:
     |Algae A|
            \ar[d]_-{|cata showA|}
 &
-    |1 + A \times B|
-           \ar[d]^{|id + Show A \times Show B|}
+    |1 + A >< B|
+           \ar[d]^{|id + Show A >< Show B|}
            \ar[l]_-{|inA|}
 \\
      |String|
 &
-     |1 + String \times String|
+     |1 + String >< String|
            \ar[l]^-{|[const "A", conc]|}
 }
 
