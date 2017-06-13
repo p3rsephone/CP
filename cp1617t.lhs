@@ -10,6 +10,7 @@
 %================= lhs2tex=====================================================%
 %include polycode.fmt
 %format above = "\textsuperscript{*}"
+%format Nat = "\mathbb{N}_0"
 %format (cata g)= "\cata{" g "}"
 %format (ana g)= "\ana{" g "}"
 %format (cataNat g)= "\cata{" g "}"
@@ -882,6 +883,7 @@ inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 \end{code}
 
 Nota: Teste \emph{QuickCheck}:
+Neste teste foi necessário restringir o \emph{x} entre 1 e 2, como pedido no enunciado. Para além disso, como inv dá uma aproximação de 1/x, era preciso ter em conta um erro pequeno de cálculo, daí o grupo ter utilizado o número 0.000000000000009. Por fim, foi decidido que seria melhor testar com 50000 iterações.
 \begin{code}
 prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 \end{code}
@@ -1062,6 +1064,8 @@ Exemplo: \emph{worker diana tania paulo } - (3,False) - \emph{wrapper (3,False)}
 \hfill \break
 
 Nota: Teste \emph{QuickCheck}:
+Para este teste, foi necessário gerar uma String aleatória composta por caracteres de 'A' a 'Z', incluindo espaços, tabs e novas linhas. Deste modo, foram criadas as funções 'genSafeChar' e 'genSafeString' que, em conjunto com o wrapper para a String 'SafeString', geram as Strings necessárias ao teste da solução proposta.
+
 \begin{code}
 genSafeChar :: Gen Char
 genSafeChar = elements $['a'..'z'] ++ "/n/t "
@@ -1351,6 +1355,23 @@ Diagramas da função \emph{generateAlgae}:
 
 
 \hfill \break
+
+
+Explicação do tipo Nat ------ 1 + Nat x Nat
+
+\xymatrix@@C=5cm{
+    |Nat|
+           \ar[d]_-{outNat}
+\\
+    |1 + Nat|
+           \ar[d]_-{id + <id,id>}
+\\
+    |1 + Nat >< Nat|
+}
+
+
+
+\hfill \break
 \hfill \break
 
 \xymatrix@@C=3cm{
@@ -1428,6 +1449,7 @@ showAlgae = cataA ginA ginB
 
 
 Nota: Testes do \emph{QuickCheck}
+Neste teste foi necessário usar as funções 'fromIntegral' e 'toInteger' para garantir a compatibilidade de tipos durante o teste. Também se chegou à conclusão de que seria melhor restringir o \emph{x} entre 1 e 25 já que com valores mais elevados do \emph{x}, os testes não seriam efetuados em tempo útil, ou seja, poderiam demorar dias a ser completados. 
 \begin{code}
 prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == 
                                         (fromIntegral .fib.succ. toInteger) x
