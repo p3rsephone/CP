@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{cp1617t}
 \usepackage{mathtools}
+\usepackage{amsmath}
 \usepackage[all]{xy}
 %================= lhs2tex=====================================================%
 %include polycode.fmt
@@ -64,7 +65,7 @@
 %format LTree = "\mathsf{LTree}"
 %format succ = "\mathsf{succ}"
 %format (lcbr (x)(y)) = "\begin{lcbr}" x "\\" y "\end{lcbr}"
-%format (longcond (c)(t)(e)) = "\begin{array}{ll}\multicolumn{2}{l}{" c -> "}\\& " t ",\\& " e "\end{array}"
+%format (longcond (c)(t)(e)) = "\begin{array}[t]{ll}\multicolumn{2}{l}{" c -> "}\\& " t ",\\& " e "\end{array}"
 
 %-------------- interface with pdbc.lhs ------------------------------------
 \def\monadification{4.10}
@@ -88,6 +89,7 @@
 \date\mydate
 
 \makeindex
+
 
 \begin{document}
 
@@ -960,21 +962,23 @@ Neste ponto, é necessário aplicar a Lei Eq-+ a ambas as condições do sistema
 
 \pagebreak
 Para descobrir h2 é necessária a 2ªLei de fusão do condicional e a Lei de Leibniz, usadas na seguinte prova:
+
+
 \begin{eqnarray*}
 \start
-  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split((not.sep.p1) (lh.p2)))) ((wc.p2) +1) (wc.p2)|
+  |h2.(id >< (split wc lh)) = longcond ((uncurry(&&)).(split (not.sep.p1) (lh.p2) )) ((wc.p2) +1) (wc.p2)|
 %
  \just{|<=>|}{ |Cancelamento-x|; Definição de succ }
 %
-  |h2.(id >< (split wc lh)) = cond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2))) (succ.p1.(split wc lh).p2) (p1.split wc) lh).p2|
+  |h2.(id >< (split wc lh)) = longcond ((uncurry(&&)).(split (not.sep.p1) (p2.(split wc lh).p2) )) (succ.p1.(split wc lh).p2) (p1.(split wc lh).p2)|
 %
  \just{|<=>|}{ |Fusão-x|; |Reflexão-x|; |Natural-p1|; |Natural-p2|; |Cancelamento-x| }
 %
-  |h2.(id><(split wc lh)) = cond ((uncurry(&&)).((not sep)><(p2.(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
+  |h2.(id><(split wc lh)) = longcond ((uncurry(&&)).((not sep)><(p2.(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
  \just{|<=>|}{ |Functor-x| }
 %
-  |h2.(id><(split wc lh)) = cond ((uncurry(&&)).(((not sep.p1)><p2).(id><(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
+  |h2.(id><(split wc lh)) = longcond ((uncurry(&&)).(((not sep.p1)><p2).(id><(split wc lh)))) (succ.p1.p2.(id><(split wc lh))) (p1.p2.(id><(split wc lh)))|
 %
  \just{|<=>|}{ 2ªLei de fusão do condicional; Lei de Leibniz }
 %
@@ -1038,7 +1042,7 @@ Conclui-se assim que
   |k = either ( const True ) ( sep.p1 )|
 \end{eqnarray*}
 
-\pagebreak
+
 Finalmente, segue-se a solução final deste problema e um exemplo (ou teste no terminal) de como o \emph{|worker|/|wrapper|} funcionaria.
 
 \begin{code}
@@ -1246,7 +1250,7 @@ Diagrama:
     |A above|
 &
     |1 + A above >< (A >< A above) above|
-        \ar[l]_-{|lsplitB|}
+        \ar[l]_-{|inordB|}
 }
 
 \hfill \break
@@ -1274,8 +1278,11 @@ Código e imagem:
        \includegraphics[width=0.9\textwidth]{cp1617t_media/nossa.png}
 \end{center}
 
+
 \begin{code}
-bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Nil), (9, Nil)]}, block = [(15,Block {leftmost = Nil,block = [(10, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,block = [(18, Nil)]}) ]}
+bt = Block {leftmost = Block {leftmost = Nil,block = [(1, Nil), (3, Nil), (7, Nil), (9, Nil)]}, 
+    block = [(15,Block {leftmost = Nil,block = [(10, Nil), (12, Nil),(14,Nil)]}),(16,Block { leftmost = Nil,
+    block = [(18, Nil)]}) ]}
 \end{code}
 
 %----------------------------------------------------------------------------------------------------------------------
@@ -1328,11 +1335,37 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 
 Diagramas da função \emph{generateAlgae}:
 
+\xymatrix@@C=3cm{
+    |Algae A|
+             \ar[r]^-{|outA|}
+&
+    |1 + A >< B|
+\\
+     |Nat|
+            \ar[u]^-{|ana generateA|}
+            \ar[r]_-{|(id + split (id) (id) ).(outNat)|}
+&
+     |1 + Nat >< Nat|
+            \ar[u]_{|id + generateA A >< generateA B|}
+}
 
 
+\hfill \break
+\hfill \break
 
-
-
+\xymatrix@@C=3cm{
+    |B|
+             \ar[r]^-{|outB|}
+&
+    |1 + A|
+\\
+     |Nat|
+            \ar[u]^-{|ana generateB|}
+            \ar[r]_-{|outNat|}
+&
+     |1 + Nat|
+            \ar[u]_{|id + generateB A|}
+}
 
 
 \hfill \break
@@ -1357,7 +1390,7 @@ Diagramas da função \emph{showAlgae}:
            \ar[d]_-{|cata showA|}
 &
     |1 + A >< B|
-           \ar[d]^{|id + Show A >< Show B|}
+           \ar[d]^{|id + ShowA A >< ShowA B|}
            \ar[l]_-{|inA|}
 \\
      |String|
@@ -1370,11 +1403,11 @@ Diagramas da função \emph{showAlgae}:
 \hfill \break
 
 \xymatrix@@C=3cm{
-    |Algae B|
+    |B|
            \ar[d]_-{|cata showB|}
 &
     |1 + A|
-           \ar[d]^{|id + Show A|}
+           \ar[d]^{|id + ShowB A|}
            \ar[l]_-{|inB|}
 \\
      |String|
@@ -1396,7 +1429,8 @@ showAlgae = cataA ginA ginB
 
 Nota: Testes do \emph{QuickCheck}
 \begin{code}
-prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegral .fib.succ. toInteger) x
+prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == 
+                                        (fromIntegral .fib.succ. toInteger) x
 \end{code}
 
 %------------------------------------------------------------------------------------------------------------------
@@ -1405,27 +1439,47 @@ prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == (fromIntegra
 
 O problema 5 tem como base probabilidades, e, consequentemente, o uso de mónades. Como primeira instância, era necessário definir a função \emph{permuta} para construir a árvore de jogos a partir de uma permutação aleatória das equipas. A segunda parte do exercício envolvia a definição de outra função, \emph{eliminatoria}, que dá como resultado a distribuição de equipas vencedoras do campeonato.
 
+\par O raciocínio até chegar à solução da primeira função, - \emph{permuta} - envolveu duas fases: inicialmente, a função foi definida em \emph{pointwise}, e por fim foi convertida para "forma" de mónades, que é a solução final.
 
+\par Definição \emph{pointwise} de \emph{permuta}:
 \begin{code}
+
+permuta1 :: [a] -> IO[a]
+permuta1 [] = []
+permuta1 a = (c:b)
+    where (c,d) = getR(a)
+          b = permuta1(d)
+\end{code}
+
+\hfill \break
+
+\par Solução final:
+\begin{code}
+permuta :: [a] -> IO[a]
 permuta [] = return []
 permuta x = do {(a,b) <- getR x; c <-permuta b ;return (a:c)}
+\end{code}
 
+\hfill \break
+\hfill \break
+
+\par Para a segunda função - \emph{eliminatoria} procedeu-se do mesmo modo. Assim, primeiro, esta foi definida em \emph{pointwise}, e de seguida surgiu a solução final.
+
+\par Definição \emph{pointwise} de \emph{eliminatoria}:
+\begin{code}
+
+eliminatoria1 :: LTree Equipa -> Equipa
+eliminatoria1 (Leaf a) = a
+eliminatoria1 (Fork (e,d)) = jogo(eliminatoria e, eliminatoria d)
+\end{code}
+
+\hfill \break
+
+\par Solução final:
+\begin{code}
 eliminatoria (Leaf z) =  return z
 eliminatoria(Fork (a,b)) = do {sortA <- eliminatoria a; sortB <- eliminatoria b; jogo(sortA,sortB)}
 \end{code}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 %----------------- Fim do anexo cpm soluções propostas ------------------------%
