@@ -882,8 +882,9 @@ Finalmente, obtemos a solução ao problema,
 inv x = p2.(for (split   (((1-x)*).p1)  ( (uncurry(+)).(((1-x)*)><id) ) ) (1,1))
 \end{code}
 
-Nota: Teste \emph{QuickCheck}:
-Neste teste foi necessário restringir o \emph{x} entre 1 e 2, como pedido no enunciado. Para além disso, como inv dá uma aproximação de 1/x, era preciso ter em conta um erro pequeno de cálculo, daí o grupo ter utilizado o número 0.000000000000009. Por fim, foi decidido que seria melhor testar com 50000 iterações.
+\hfill \break
+\par Nota: Teste \emph{QuickCheck}.
+\par Neste teste foi necessário restringir o \emph{x} entre 1 e 2, como pedido no enunciado. Para além disso, como \emph{inv x} dá uma aproximação de 1/x, era preciso ter em conta um erro pequeno de cálculo, daí o grupo ter utilizado o número 0.000000000000009. Por fim, foi decidido que seria melhor testar com 50000 iterações.
 \begin{code}
 prop_Inv x = (x>1 && x<2) ==> abs((inv (inv x 50000) 50000) - x) < 0.000000000000009
 \end{code}
@@ -1004,7 +1005,7 @@ Depois de tudo isto, falta ainda provar a segunda condição:
 \start
   |(either (lh.nil) (lh.cons) ) = (either (k.i1) ((k.i2)><(split wc lh)) )|
 %
- \just{|<=>|}{ Eq-+; COmo já provamos, k será |k=(either k1 k2)|}
+ \just{|<=>|}{ Eq-+; Como já provamos, k será |k=(either k1 k2)|}
 %
   \begin{cases}
     |lh.nil = k1|                         \\
@@ -1061,10 +1062,12 @@ worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k
 
 Exemplo: \emph{worker diana tania paulo } - (3,False) - \emph{wrapper (3,False)} - 3
 
+
 \hfill \break
 
-Nota: Teste \emph{QuickCheck}:
-Para este teste, foi necessário gerar uma String aleatória composta por caracteres de 'A' a 'Z', incluindo espaços, tabs e novas linhas. Deste modo, foram criadas as funções 'genSafeChar' e 'genSafeString' que, em conjunto com o wrapper para a String 'SafeString', geram as Strings necessárias ao teste da solução proposta.
+\par Nota: Teste \emph{QuickCheck}.
+
+\par Para este teste, foi necessário gerar uma \emph{String} aleatória composta por caracteres de 'A' a 'Z', incluindo espaços, \tabs{tabs} e novas linhas. Deste modo, foram criadas as funções 'genSafeChar' e 'genSafeString' que, em conjunto com o \emph{wrapper} para a String 'SafeString', geram as Strings necessárias ao teste da solução proposta.
 
 \begin{code}
 genSafeChar :: Gen Char
@@ -1132,16 +1135,16 @@ inordB = either nil join
 
 \xymatrix@@C=3cm{
     |B-Tree A|
-           \ar[d]_-{|cata inord|}
+           \ar[d]_-{|cata inordB|}
 &
     |1 + (B-Tree A >< (A >< B-treeA) above)|
-           \ar[d]^{|id +((cata inord) >< map(id >< cata inord))|}
+           \ar[d]^{|id +((cata inordB) >< map(id >< cata inordB))|}
            \ar[l]_-{|inB-tree|}
 \\
      |A above|
 &
      |1 + A above >< (A >< A above ) above|
-           \ar[l]^-{|inord|}
+           \ar[l]^-{|inordB|}
 }
 
 \hfill \break
@@ -1165,7 +1168,7 @@ largestBlock = cataB_tree largestB
            \ar[d]_-{|cata largestB|}
 &
     |1 + (B-Tree A >< (A >< B-treeA) above)|
-           \ar[d]^{|id +((cata largestB) >< map(id >< cata largestB))|}
+           \ar[d]^{|id +(( cata largestB) >< map(id >< cata largestB))|}
            \ar[l]_-{|inB-tree|}
 \\
      |Int|
@@ -1237,24 +1240,24 @@ qSortB_tree = hyloB_tree inordB lsplitB_tree
 Diagrama:
  \xymatrix@@C=3cm{
     |A*|
-           \ar[d]_-{|ana lsplitB|}
-            \ar[r]^-{|lsplitB|}
+           \ar[d]_-{|ana lsplitBGene|}
+            \ar[r]^-{|lsplitBGene|}
 &
     |1 + A* >< (A >< A above) above|
-           \ar[d]^{|id +((ana lsplitB) >< map(id >< ana lsplitB))|}
+           \ar[d]^{|id +((ana lsplitBGene) >< map(id >< ana lsplitBGene))|}
 \\
      |B|
-        \ar[d]_-{|cata inordB|}
+        \ar[d]_-{|cata inordBGene|}
         \ar[r]^-{|outB|}
 &
      |1 + B >< (A >< B) above|
            \ar[l]^-{|inB|}
-            \ar[d]^{|id +((cata inordB) >< map(id >< cata inordB))|}
+            \ar[d]^{|id +((cata inordBGene) >< map(id >< cata inordBGene))|}
 \\
     |A above|
 &
     |1 + A above >< (A >< A above) above|
-        \ar[l]_-{|inordB|}
+        \ar[l]^-{|inordBGene|}
 }
 
 \hfill \break
@@ -1333,7 +1336,6 @@ anaB ga gb = inB . (id -|- anaA ga gb) . gb
 \par Como segunda instância foram requeridas duas definições: a definição da função \emph{generateAlgae} como um anamorfismo de \emph{Algae}, e a da função \emph{showAlgae} com um catamorfismo de \emph{Algae}. Ambas as funções foram conseguidas através do desenho de diagramas, que se apresentam a seguir, tal como as respetivas soluções.
 
 
-%-----------------------------------------------------------------------------AQUI
 \hfill \break
 \hfill \break
 
@@ -1346,8 +1348,8 @@ Diagramas da função \emph{generateAlgae}:
     |1 + A >< B|
 \\
      |Nat|
-            \ar[u]^-{|ana generateA|}
-            \ar[r]_-{|(id + split (id) (id) ).(outNat)|}
+            \ar[u]^-{|generate A|}
+            \ar[r]_-{|(id + (split (id) (id) )) . outNat|}
 &
      |1 + Nat >< Nat|
             \ar[u]_{|id + generateA A >< generateA B|}
@@ -1381,7 +1383,7 @@ Explicação do tipo Nat ------ 1 + Nat x Nat
     |1 + A|
 \\
      |Nat|
-            \ar[u]^-{|ana generateB|}
+            \ar[u]^-{|generateB|}
             \ar[r]_-{|outNat|}
 &
      |1 + Nat|
@@ -1395,11 +1397,15 @@ Explicação do tipo Nat ------ 1 + Nat x Nat
 Função \emph{generateAlgae}:
 \begin{code}
 generateAlgae = anaA genA genB
-                where genA = (id -|- dup) . outNat
+                where genA = (id -|- (split id id) ) . outNat
                       genB = outNat
 \end{code}
 
-%-----------------------------------------------------------------------------AQUI
+
+
+
+
+
 
 \hfill \break
 \hfill \break
@@ -1408,7 +1414,7 @@ Diagramas da função \emph{showAlgae}:
 
 \xymatrix@@C=3cm{
     |Algae A|
-           \ar[d]_-{|cata showA|}
+           \ar[d]_-{|showA|}
 &
     |1 + A >< B|
            \ar[d]^{|id + ShowA A >< ShowA B|}
@@ -1425,7 +1431,7 @@ Diagramas da função \emph{showAlgae}:
 
 \xymatrix@@C=3cm{
     |B|
-           \ar[d]_-{|cata showB|}
+           \ar[d]_-{|showB|}
 &
     |1 + A|
            \ar[d]^{|id + ShowB A|}
@@ -1447,9 +1453,9 @@ showAlgae = cataA ginA ginB
                   ginB = either (const "B") (id)
 \end{code}
 
-
-Nota: Testes do \emph{QuickCheck}
-Neste teste foi necessário usar as funções 'fromIntegral' e 'toInteger' para garantir a compatibilidade de tipos durante o teste. Também se chegou à conclusão de que seria melhor restringir o \emph{x} entre 1 e 25 já que com valores mais elevados do \emph{x}, os testes não seriam efetuados em tempo útil, ou seja, poderiam demorar dias a ser completados. 
+\hfill \break
+\par Nota: Teste \emph{QuickCheck}.
+\par Neste teste foi necessário usar as funções 'fromIntegral' e 'toInteger' para garantir a compatibilidade de tipos durante o teste. Também se chegou à conclusão de que seria melhor restringir o \emph{x} entre 1 e 25 já que com valores mais elevados, os testes não seriam efetuados em tempo útil, ou seja, poderiam demorar dias a ser completados. 
 \begin{code}
 prop_sg x = (x>1 && x<25) ==> (length.showAlgae.generateAlgae) x == 
                                         (fromIntegral .fib.succ. toInteger) x
@@ -1466,10 +1472,13 @@ O problema 5 tem como base probabilidades, e, consequentemente, o uso de mónade
 \par Definição \emph{pointwise} de \emph{permuta}:
 \begin{code}
 
-permuta1 :: [a] -> IO[a]
+getNotMon :: [a] -> (a,[a])
+getNotMon (a:b) = (a,b)
+
+permuta1 :: [a] -> [a]
 permuta1 [] = []
 permuta1 a = (c:b)
-    where (c,d) = getR(a)
+    where (c,d) = getNotMon(a)
           b = permuta1(d)
 \end{code}
 
@@ -1477,7 +1486,6 @@ permuta1 a = (c:b)
 
 \par Solução final:
 \begin{code}
-permuta :: [a] -> IO[a]
 permuta [] = return []
 permuta x = do {(a,b) <- getR x; c <-permuta b ;return (a:c)}
 \end{code}
@@ -1490,9 +1498,12 @@ permuta x = do {(a,b) <- getR x; c <-permuta b ;return (a:c)}
 \par Definição \emph{pointwise} de \emph{eliminatoria}:
 \begin{code}
 
+jogoNotMon :: (a,a) -> a
+jogoNotMon (a,b) = b
+
 eliminatoria1 :: LTree Equipa -> Equipa
 eliminatoria1 (Leaf a) = a
-eliminatoria1 (Fork (e,d)) = jogo(eliminatoria e, eliminatoria d)
+eliminatoria1 (Fork (e,d)) = jogoNotMon (eliminatoria1 e, eliminatoria1 d)
 \end{code}
 
 \hfill \break
