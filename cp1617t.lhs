@@ -1033,11 +1033,11 @@ Para descobrir k2 é necessária a Lei de Leibniz, usada na seguinte prova:
 \start
   |k2.(id >< (split wc lh)) = sep.p1|
 %
- \just{|<=>|}{ |Natural-p1| }
+ \just{|<=>|}{ |Natural-p1|; |Natural-id| }
 %
   |k2.(id >< (split wc lh)) = sep.p1.(id >< (split wc lh))|
 %
- \just{|<=>|}{ |Natural-id|; Lei de Leibniz }
+ \just{|<=>|}{ Lei de Leibniz }
 %
 |k2 = sep.p1|
 \end{eqnarray*}
@@ -1062,7 +1062,7 @@ wc_w_final = wrapper . worker
 wrapper = p1
 worker = cataList( split ( either ( const 0 ) ( h2 )) (either ( const True ) ( k2 )  ) )
     where h2 = cond (uncurry(&&).((not.sep) >< p2 )) (succ.p1.p2) (p1.p2)
-          k2 = sep.p1
+            k2 = sep.p1
 
 \end{code}
 
