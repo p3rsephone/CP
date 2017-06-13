@@ -1264,9 +1264,52 @@ Diagrama:
 \hfill \break
 
 \pagebreak
-\par Finalmente, era requerido que fosse definida a função \emph{dotB-tree}, que permitia mostrar em Graphviz árvores \emph{B-tree}. Segue-se a solução definitiva e uma imagem de exemplo com o respetivo código.
+\par Finalmente, era requerido que fosse definida a função \emph{dotB-tree}, que permitia mostrar em Graphviz árvores \emph{B-tree}. Para esta função, já presente nas bibliotecas da Unidade Curricular, foi apenas necessário adaptar ao caso concreto da \emph{B-tree} deste problema 3. A dificuldade centrou-se na função auxiliar \emph{cB-tree2exp}, para a qual foi desenhado um diagrama e feito, passo a passo, um raciocínio de tipos para conseguir chegar à definição final da função auxiliar. Segue-se o catamorfismo que ajudou ao raciocínio, juntamente com a explicação passo a passo,a solução definitiva, e uma imagem de exemplo com o respetivo código.
 
 
+\hfill \break
+\par Catamorfismo de cB-tree2exp:
+\hfill \break
+\hfill \break
+\xymatrix@@C=3cm{
+    |B|
+           \ar[d]_-{|cata g|}
+&
+    |1 + B >< (A >< B) above|
+           \ar[d]^{|id +((cata g) >< map(id >< cata g))|}
+           \ar[l]_-{|inB-tree|}
+\\
+     |E|
+&
+     |1 + E >< (A >< E) above|
+           \ar[l]^-{|g|}
+}
+
+\hfill \break
+
+\par Explicação passo a passo do raciocínio até chegar a cB-tree2exp:
+
+\hfill \break
+
+\xymatrix@@C=5cm{
+    |1 + E >< (A >< E) above|
+           \ar[d]_-{|id >< unzip|}
+\\
+    |E >< (A above >< E above)|
+        \ar[d]_-{|<p1.p2, <p1, p2.p2>>|}
+\\
+    |A above >< (E >< E above)|
+              \ar[d]_-{|id >< cons|}
+\\
+    |A above >< E above|
+              \ar[d]_-{|uncurry(Term)|}
+\\
+    |E|
+}
+
+
+\hfill \break
+\par Código:
 \begin{code}
 dotB_tree :: (Show a) => B_tree a -> IO ExitCode
 dotB_tree = dotpict . bmap nothing (Just .init.concat.(map (++"|")).(map show)) . cB_tree2Exp
@@ -1276,11 +1319,9 @@ cB_tree2Exp = cataB_tree (either (const (Var "nil")) (aux) )
               where aux = uncurry(Term).(id >< cons).(split (p1.p2) (split (p1) (p2.p2) ) ).(id >< unzip)
 \end{code}
 
-
-\hfill \break
 \hfill \break
 
-Código e imagem:
+Imagem e código respetivo:
 \begin{center}
        \includegraphics[width=0.9\textwidth]{cp1617t_media/nossa.png}
 \end{center}
