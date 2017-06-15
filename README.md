@@ -5,6 +5,7 @@ If you still want to know more, like in what consisted the problems, or how the 
 
 ## Contributors
 I would like to thank:
+
 [Diana Costa](https://github.com/diisnc)
 
 [Paulo Mendes](https://github.com/PJM97)
