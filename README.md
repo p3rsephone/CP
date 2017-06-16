@@ -11,4 +11,4 @@ If you still want to know more, like in what consisted the problems, or how the 
 
 [Tânia Silva](https://github.com/p3rsephone) (That's me :wink:)
 
-And basically *all* of the class: thank you!
+[//]: # (And basically *all* of the class: thank you!)
